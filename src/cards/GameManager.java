@@ -6,6 +6,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import data.DBStatsHandler;
+import data.DBUserProfileHandler;
 
 public class GameManager {
     private Deck deck;
@@ -35,12 +37,24 @@ public class GameManager {
     
     // Start the game
     public void startGame() {
+    	
+    	
         dealPlayerCard();
-        dealPlayerCard();
-        dealDealerCard();
-        dealDealerCard();
-        
         displayHands();
+        
+        
+        dealPlayerCard();
+        displayHands();
+        
+        
+        dealDealerCard();
+        displayHands();
+        
+        
+        dealDealerCard();
+        displayHands();
+        
+        
         
         if(dealerHand.checkBlackJack()==true) {
         	
@@ -175,6 +189,7 @@ public class GameManager {
 
         if (playerValue > 21) {
             gameResults = "Dealer wins, Player Busted";  // Player busts, dealer wins
+            
         } else if (dealerValue > 21) {
             gameResults = "Player wins, Dealer Busted";  // Dealer busts, player wins
         } else if (playerValue > dealerValue) {
@@ -208,6 +223,15 @@ public class GameManager {
  			blackjack = true;
  		}
  		return blackjack;
+ 		
+ 	}
+ 	public static void wait(int time) {
+ 		
+ 		try { 		   
+ 		    Thread.sleep(time);
+ 		} catch (InterruptedException e) {
+ 		    e.printStackTrace();
+ 		}
  		
  	}
  	
