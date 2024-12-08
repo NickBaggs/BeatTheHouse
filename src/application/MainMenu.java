@@ -78,7 +78,12 @@ public class MainMenu {
 
         // Button actions (for now, just console output)
         greenButton.setOnAction(e -> System.out.println("Special Powers Mode clicked"));
-        blueButton.setOnAction(e -> System.out.println("Practice Mode clicked"));
+
+        // Action for Practice Mode button
+        blueButton.setOnAction(e -> {
+            System.out.println("Practice Mode clicked");
+            mainApp.showPracticeModeScreen(); // Calls the method in Main to show the Practice Mode screen
+        });
         
         // Navigate to StandardMode screen when red button (Standard Mode) is clicked
         redButton.setOnAction(e -> mainApp.showStandardModeScreen());

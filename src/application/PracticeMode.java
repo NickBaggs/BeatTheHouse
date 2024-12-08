@@ -13,24 +13,24 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.control.Label;  // For winner message
-import cards.GameManager;
+import javafx.scene.control.Label;
+import cards.PracticeGameManager;
 import cards.PlayerHand;
 import cards.DealerHand;
 
-public class StandardMode {
+public class PracticeMode {
     private Pane layout;
     private Main mainApp;
-    private GameManager gameManager;
+    private PracticeGameManager practiceGameManager; // Use PracticeGameManager
     private HBox playerHandContainer;
     private HBox dealerHandContainer;
 
     private Button dealButton;
     private Button hitButton;
     private Button stayButton;
-    private Label winnerLabel; 
+    private Label winnerLabel;
 
-    public StandardMode(Main mainApp) {
+    public PracticeMode(Main mainApp) {
         this.mainApp = mainApp;
         layout = new Pane();  
 
@@ -61,12 +61,12 @@ public class StandardMode {
 
         layout.getChildren().addAll(playerHandContainer, dealerHandContainer);
 
-        // Initialize GameManager
-        gameManager = new GameManager(10, playerHandContainer, dealerHandContainer, mainApp);
+        // Initialize PracticeGameManager for practice mode
+        practiceGameManager = new PracticeGameManager(1, playerHandContainer, dealerHandContainer, mainApp); // 1 deck for practice
 
         // Create the "Deal" button 
         dealButton = new Button();
-        String dealButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Deal_Button.png"; 
+        String dealButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/simple_ui_button_round_128_down_1.png"; 
         Image dealButtonImage = new Image(dealButtonImagePath);
         ImageView dealButtonImageView = new ImageView(dealButtonImage);
         dealButton.setGraphic(dealButtonImageView);
@@ -77,17 +77,16 @@ public class StandardMode {
         dealButton.layoutYProperty().bind(layout.heightProperty().subtract(dealButton.heightProperty()).divide(2));  // Center vertically
 
         dealButton.setOnAction(e -> {
-            System.out.print(mainApp.getActiveProfileId());
-            gameManager.resetGame();  
-            gameManager.startGame();  
+            practiceGameManager.resetGame();  
+            practiceGameManager.startGame();  
             dealButton.setVisible(false);  
             hitButton.setVisible(true);   
             stayButton.setVisible(true); 
             winnerLabel.setText("Start the game");  
             winnerLabel.setVisible(false);  
             
-            if(gameManager.checkForBlackJack()) {
-                gameManager.dealerTurn();         
+            if(practiceGameManager.checkForBlackJack()) {
+                practiceGameManager.dealerTurn();         
                 swapButtons();
                 updateWinnerLabel(); 
             }
@@ -99,7 +98,7 @@ public class StandardMode {
 
         // Create the "Stay" button 
         stayButton = new Button();
-        String stayButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Stay_Button.png"; 
+        String stayButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/simple_ui_button_round_128_down_2.png"; 
         Image stayButtonImage = new Image(stayButtonImagePath);
         ImageView stayButtonImageView = new ImageView(stayButtonImage);
         stayButton.setGraphic(stayButtonImageView);
@@ -108,7 +107,7 @@ public class StandardMode {
 
         // Create the "Hit" button (right side)
         hitButton = new Button();
-        String hitButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Hit_Button.png"; 
+        String hitButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/simple_ui_button_round_128_down_0.png"; 
         Image hitButtonImage = new Image(hitButtonImagePath);
         ImageView hitButtonImageView = new ImageView(hitButtonImage);
         hitButton.setGraphic(hitButtonImageView);
@@ -122,20 +121,20 @@ public class StandardMode {
         buttonContainer.layoutXProperty().bind(layout.widthProperty().subtract(buttonContainer.widthProperty()).divide(2));  
         buttonContainer.layoutYProperty().bind(layout.heightProperty().multiply(0.85));  
 
-        // Action for stay button
+        //action for stay button
         stayButton.setOnAction(e -> {
             System.out.println("Stay button pressed");
-            gameManager.dealerTurn();         
+            practiceGameManager.dealerTurn();         
             swapButtons();
             updateWinnerLabel();  
         });
         
-        // Action for hit button
+        //action for hit button
         hitButton.setOnAction(e -> {
             System.out.println("Hit button pressed");
-            gameManager.playerTurn();  
+            practiceGameManager.playerTurn();  
             
-            if(gameManager.getPlayerHandValue() > 21) {
+            if(practiceGameManager.getPlayerHandValue() > 21) {
                 swapButtons();
                 updateWinnerLabel();  
             }
@@ -165,9 +164,9 @@ public class StandardMode {
         return layout;
     }
 
-    // Sets the winner text
+    //sets the winner text
     public void updateWinnerLabel() {
-        String winnerText = gameManager.getWinner();  
+        String winnerText = practiceGameManager.getWinner();  
         winnerLabel.setText(winnerText);  
         winnerLabel.setVisible(true);  
     }

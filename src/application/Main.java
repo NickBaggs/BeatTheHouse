@@ -15,7 +15,7 @@ public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        // Initialize database connection
+      
     	
         DatabaseConnector.getConnection();
         DatabaseInitialization dbInit = new DatabaseInitialization();
@@ -23,7 +23,7 @@ public class Main extends Application {
         this.dbHandler = new DBUserProfileHandler();
         this.primaryStage = primaryStage;
 
-        // Show the title screen 
+        
         showTitleScreen();
     }
     
@@ -34,7 +34,15 @@ public class Main extends Application {
         this.activeProfileId = profileId;
         System.out.println("Active profile ID set to: " + profileId);
     }
+    
+ 
+    public int getActiveProfileId() {
+        return this.activeProfileId;
+    }
 
+    
+    
+    
     
     
     
@@ -72,6 +80,12 @@ public class Main extends Application {
     public void showStandardModeScreen() {
         StandardMode standardModeScreen = new StandardMode(this);
         Scene scene = new Scene(standardModeScreen.getLayout(), 1200, 800);  // Adjust size as needed
+        primaryStage.setScene(scene);
+    }
+    
+    public void showPracticeModeScreen() {
+        PracticeMode practiceModeScreen = new PracticeMode(this);
+        Scene scene = new Scene(practiceModeScreen.getLayout(), 1200, 800);  // Adjust size as needed
         primaryStage.setScene(scene);
     }
 

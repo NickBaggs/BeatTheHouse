@@ -10,7 +10,8 @@ import application.Main;
 import data.DBStatsHandler;
 import data.DBUserProfileHandler;
 
-public class GameManager {
+
+public class PracticeGameManager {
 	private Main mainApp;
     private Deck deck;
     private PlayerHand playerHand;
@@ -23,8 +24,8 @@ public class GameManager {
     private DBStatsHandler statsHandler;
 
     // Constructor for player and dealer hands
-    public GameManager(int deckCount, HBox playerHandContainer, HBox dealerHandContainer, Main mainApp) {
-        this.mainApp = mainApp;  // Store the Main instance for later use
+    public PracticeGameManager(int deckCount, HBox playerHandContainer, HBox dealerHandContainer, Main mainApp) {
+        this.mainApp = mainApp;  
         this.deckCount = deckCount;
         this.deck = new Deck();
         this.deck.addDecks(deckCount);
@@ -150,8 +151,7 @@ public class GameManager {
         }
     }
 
-   
- // Dealer's turn
+    // Dealer's turn
     public void dealerTurn() {
         System.out.println("Dealer's turn.");
         isPlayerTurn = false;  
@@ -198,48 +198,31 @@ public class GameManager {
         int playerValue = getPlayerHandValue();
         int dealerValue = getDealerHandValue();
 
-        // Debugging output for player's hand ranks
-        System.out.println("Player Hand: " + getPlayerHandValue());
-        System.out.print("Player Cards: ");
-        for (Card card : playerHand.getHand()) {
-            System.out.print(card.getRank() + " ");  // Prints the rank of each card in the player's hand
-            
-            System.out.println();
-        }
-        
-        
-        System.out.println();  // Newline for better readability
-        System.out.println();
-        // Debugging output for dealer's hand ranks
-        System.out.println("Dealer Hand: " + getDealerHandValue());
-        System.out.print("Dealer Cards: ");
-        for (Card card : dealerHand.getHand()) {
-            System.out.print(card.getRank() + " ");  // Prints the rank of each card in the dealer's hand
-        }
-        System.out.println();  // Newline for better readability
-        System.out.println();
-        
         if (playerValue > 21) {
             gameResults = "Dealer wins, Player Busted";  // Player busts, dealer wins
-            statsHandler.incrementLosses(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " PLAYER BUST");
+            
+            System.out.print(mainApp.getActiveProfileId() + " PLAYER BUST");
+            
         } else if (dealerValue > 21) {
             gameResults = "Player wins, Dealer Busted";  // Dealer busts, player wins
-            statsHandler.incrementWins(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " DEALER BUST");
+            
+            
+            System.out.print(mainApp.getActiveProfileId() + " DEALER BUST");
+            
         } else if (playerValue > dealerValue) {
             gameResults = "Player wins";  // Player wins
-            statsHandler.incrementWins(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " PLAYER WINS >");
+            
+            System.out.print(mainApp.getActiveProfileId() + " PLAYER WINS NORMAL ");
+            
         } else if (dealerValue > playerValue) {
             gameResults = "Dealer Wins";  // Dealer wins
-            statsHandler.incrementLosses(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " DEALER WINS >");
+            
+            System.out.print(mainApp.getActiveProfileId() + " DEALER WINS NORMAL");
         } else {
             gameResults = "Push";  
-            System.out.println(mainApp.getActiveProfileId() + " PUSH");
+            System.out.print(mainApp.getActiveProfileId() + " PUSH");
         }
-
+        
         setWinner(gameResults);
     }
 
@@ -265,7 +248,6 @@ public class GameManager {
  		return blackjack;
  		
  	}
- 	
  	public static void wait(int time) {
  		
  		try { 		   
