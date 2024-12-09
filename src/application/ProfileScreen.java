@@ -109,14 +109,7 @@ public class ProfileScreen {
         layout.getChildren().addAll(profileLabel, profileImagesContainer);
 
         // Go to Main Menu button
-        Button goToMainMenuButton = new Button("Go to Main Menu");
-        goToMainMenuButton.setOnAction(e -> mainApp.showMainMenu());  
-        
-        // Position the button below the profile images
-        goToMainMenuButton.layoutXProperty().bind(layout.widthProperty().subtract(goToMainMenuButton.widthProperty()).divide(2));
-        goToMainMenuButton.layoutYProperty().bind(layout.heightProperty().multiply(0.8)); 
-
-        layout.getChildren().add(goToMainMenuButton);  
+       
     }
 
     public Pane getLayout() {

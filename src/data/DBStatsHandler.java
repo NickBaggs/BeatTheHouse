@@ -2,6 +2,7 @@ package data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBStatsHandler {
@@ -31,6 +32,8 @@ public class DBStatsHandler {
         }
     }
 
+    
+    
     // Method to update wins
     public void incrementWins(int userProfileId) {
         String query = "UPDATE stats SET wins = wins + 1 WHERE user_profile_id = ?";
@@ -46,6 +49,8 @@ public class DBStatsHandler {
         }
     }
 
+    
+    
     // Method to update losses
     public void incrementLosses(int userProfileId) {
         String query = "UPDATE stats SET losses = losses + 1 WHERE user_profile_id = ?";
@@ -61,6 +66,8 @@ public class DBStatsHandler {
         }
     }
 
+    
+    
     // Method to update chip count (add or subtract)
     public void updateChipCount(int userProfileId, int chipsChange) {
         String query = "UPDATE stats SET chip_count = chip_count + ? WHERE user_profile_id = ?";
@@ -77,6 +84,8 @@ public class DBStatsHandler {
         }
     }
 
+    
+    
     // Other methods to update stats (similar to the original code)
     public void updateChipsWon(int userProfileId, int chipsWon) {
         String query = "UPDATE stats SET chips_won = ? WHERE user_profile_id = ?";
@@ -93,6 +102,8 @@ public class DBStatsHandler {
         }
     }
 
+    
+    
     // Method to update chips lost 
     public void updateChipsLost(int userProfileId, int chipsLost) {
         String query = "UPDATE stats SET chips_lost = ? WHERE user_profile_id = ?";
@@ -109,6 +120,8 @@ public class DBStatsHandler {
         }
     }
 
+    
+    
     // Method to update total winnings
     public void updateTotalWinnings(int userProfileId, int totalWinnings) {
         String query = "UPDATE stats SET total_winnings = ? WHERE user_profile_id = ?";
@@ -125,6 +138,7 @@ public class DBStatsHandler {
         }
     }
 
+    
     // Method to update times bankrupt
     public void updateTimesBankrupt(int userProfileId, int timesBankrupt) {
         String query = "UPDATE stats SET times_bankrupt = ? WHERE user_profile_id = ?";
@@ -141,6 +155,7 @@ public class DBStatsHandler {
         }
     }
 
+    
     // Method to update highest chip count
     public void updateHighestChipCount(int userProfileId, int highestChipCount) {
         String query = "UPDATE stats SET highest_chip_count = ? WHERE user_profile_id = ?";
@@ -156,4 +171,154 @@ public class DBStatsHandler {
             e.printStackTrace();
         }
     }
+    
+    
+    public int getWins(int userProfileId) {
+        String query = "SELECT wins FROM stats WHERE user_profile_id = ?";
+        try (Connection conn = DatabaseConnector.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userProfileId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("wins");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving wins for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+        return 0;  
+    }
+
+    
+    // Getter method for losses
+    public int getLosses(int userProfileId) {
+        String query = "SELECT losses FROM stats WHERE user_profile_id = ?";
+        try (Connection conn = DatabaseConnector.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userProfileId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("losses");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving losses for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    
+    
+    // Getter method for chip count
+    public int getChipCount(int userProfileId) {
+        String query = "SELECT chip_count FROM stats WHERE user_profile_id = ?";
+        try (Connection conn = DatabaseConnector.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userProfileId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("chip_count");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving chip count for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    
+    
+    // Getter method for chips won
+    public int getChipsWon(int userProfileId) {
+        String query = "SELECT chips_won FROM stats WHERE user_profile_id = ?";
+        try (Connection conn = DatabaseConnector.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userProfileId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("chips_won");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving chips won for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    
+    
+    // Getter method for chips lost
+    public int getChipsLost(int userProfileId) {
+        String query = "SELECT chips_lost FROM stats WHERE user_profile_id = ?";
+        try (Connection conn = DatabaseConnector.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userProfileId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("chips_lost");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving chips lost for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    
+    
+    // Getter method for total winnings
+    public int getTotalWinnings(int userProfileId) {
+        String query = "SELECT total_winnings FROM stats WHERE user_profile_id = ?";
+        try (Connection conn = DatabaseConnector.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userProfileId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total_winnings");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving total winnings for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    
+    
+    // Getter method for times bankrupt
+    public int getTimesBankrupt(int userProfileId) {
+        String query = "SELECT times_bankrupt FROM stats WHERE user_profile_id = ?";
+        try (Connection conn = DatabaseConnector.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userProfileId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("times_bankrupt");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving times bankrupt for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    
+    
+    // Getter method for highest chip count
+    public int getHighestChipCount(int userProfileId) {
+        String query = "SELECT highest_chip_count FROM stats WHERE user_profile_id = ?";
+        try (Connection conn = DatabaseConnector.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userProfileId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("highest_chip_count");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving highest chip count for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }

@@ -88,6 +88,12 @@ public class Main extends Application {
         Scene scene = new Scene(practiceModeScreen.getLayout(), 1200, 800);  // Adjust size as needed
         primaryStage.setScene(scene);
     }
+    
+    public void showStatsScreen() {
+        StatsScreen statsScreen = new StatsScreen(this);
+        Scene scene = new Scene(statsScreen.getLayout(), 1200, 800);  // Adjust size as needed
+        primaryStage.setScene(scene);
+    }
 
     public static void main(String[] args) {
         launch(args);

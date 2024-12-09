@@ -4,14 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.HBox;  // For horizontal alignment
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -28,26 +21,26 @@ public class MainMenu {
         Image backgroundImage = new Image(backgroundImagePath);
 
         BackgroundImage background = new BackgroundImage(
-            backgroundImage, 
-            BackgroundRepeat.NO_REPEAT, 
-            BackgroundRepeat.NO_REPEAT, 
-            BackgroundPosition.CENTER, 
-            new BackgroundSize(100, 100, true, true, true, true)
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, true, true)
         );
 
         layout.setBackground(new Background(background));
 
         // Title Text for MainMenu
         Text titleLabel = new Text("Select A Mode");
-        titleLabel.setFont(new Font("Arial", 36));  
-        titleLabel.setFill(javafx.scene.paint.Color.WHITE);  
-        
+        titleLabel.setFont(new Font("Arial", 36));
+        titleLabel.setFill(javafx.scene.paint.Color.WHITE);
+
         // Position the title in the center
-        titleLabel.setTranslateY(-250);  
+        titleLabel.setTranslateY(-250);
 
         // Create HBox for button positioning
-        HBox buttonContainer = new HBox(30);  
-        buttonContainer.setAlignment(javafx.geometry.Pos.CENTER);  
+        HBox buttonContainer = new HBox(30);
+        buttonContainer.setAlignment(javafx.geometry.Pos.CENTER);
 
         // Create a green button (Special Powers Mode)
         Button greenButton = new Button();
@@ -70,26 +63,61 @@ public class MainMenu {
         redButton.setGraphic(redImageView);
         redButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        // Add buttons to the HBox (green first, then blue, then red)
+        // Add buttons to the HBox
         buttonContainer.getChildren().addAll(greenButton, blueButton, redButton);
 
-        // Position the button container (in the middle of the screen)
-        buttonContainer.setTranslateY(50);  // Adjust the Y position for desired space from the title
+        // Position the button container
+        buttonContainer.setTranslateY(50);
 
-        // Button actions (for now, just console output)
+        // Button actions
         greenButton.setOnAction(e -> System.out.println("Special Powers Mode clicked"));
 
         // Action for Practice Mode button
         blueButton.setOnAction(e -> {
             System.out.println("Practice Mode clicked");
-            mainApp.showPracticeModeScreen(); // Calls the method in Main to show the Practice Mode screen
+            mainApp.showPracticeModeScreen();
         });
-        
-        // Navigate to StandardMode screen when red button (Standard Mode) is clicked
+
+        // Standard Mode
         redButton.setOnAction(e -> mainApp.showStandardModeScreen());
 
-        // Add the title and button container to the layout
-        layout.getChildren().addAll(titleLabel, buttonContainer);
+        // ======== Top-Left Button for Profile Screen ============
+        Button showProfileButton = new Button();
+        Image profileImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Profile_Button.png");
+        ImageView profileImageView = new ImageView(profileImage);
+        
+
+        showProfileButton.setGraphic(profileImageView);
+        showProfileButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+
+        // Position to the top-left corner
+        showProfileButton.setTranslateX(-500); 
+        showProfileButton.setTranslateY(-300);
+
+        showProfileButton.setOnAction(e -> {
+            System.out.println("Show Profile Screen clicked");
+            mainApp.showProfileScreen();
+        });
+
+        
+        Button showStatsButton = new Button();
+        Image statsImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Stats_Button.png");
+        ImageView statsImageView = new ImageView(statsImage);
+        
+
+        showStatsButton.setGraphic(statsImageView);
+        showStatsButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+
+        showStatsButton.setTranslateX(500); 
+        showStatsButton.setTranslateY(-300);
+
+        showStatsButton.setOnAction(e -> {
+            System.out.println("Show Stats Screen clicked");  
+            mainApp.showStatsScreen();
+        });
+
+        
+        layout.getChildren().addAll(titleLabel, buttonContainer, showProfileButton, showStatsButton);
     }
 
     public StackPane getLayout() {

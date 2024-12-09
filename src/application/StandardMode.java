@@ -1,5 +1,6 @@
 package application;
 
+import javafx.animation.PauseTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,7 +18,6 @@ import javafx.scene.control.Label;  // For winner message
 import cards.GameManager;
 import cards.PlayerHand;
 import cards.DealerHand;
-
 public class StandardMode {
     private Pane layout;
     private Main mainApp;
@@ -28,6 +28,7 @@ public class StandardMode {
     private Button dealButton;
     private Button hitButton;
     private Button stayButton;
+    private Button mainMenuButton;  
     private Label winnerLabel; 
 
     public StandardMode(Main mainApp) {
@@ -72,31 +73,42 @@ public class StandardMode {
         dealButton.setGraphic(dealButtonImageView);
         dealButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        // Position the "Deal" button exactly in the center
-        dealButton.layoutXProperty().bind(layout.widthProperty().subtract(dealButton.widthProperty()).divide(2));  // Center horizontally
-        dealButton.layoutYProperty().bind(layout.heightProperty().subtract(dealButton.heightProperty()).divide(2));  // Center vertically
+        // Position the Deal button 
+        dealButton.layoutXProperty().bind(layout.widthProperty().subtract(dealButton.widthProperty()).divide(2));  
+        dealButton.layoutYProperty().bind(layout.heightProperty().subtract(dealButton.heightProperty()).divide(2));  
 
         dealButton.setOnAction(e -> {
             System.out.print(mainApp.getActiveProfileId());
             gameManager.resetGame();  
             gameManager.startGame();  
             dealButton.setVisible(false);  
-            hitButton.setVisible(true);   
-            stayButton.setVisible(true); 
+            mainMenuButton.setVisible(false);  
             winnerLabel.setText("Start the game");  
-            winnerLabel.setVisible(false);  
-            
-            if(gameManager.checkForBlackJack()) {
-                gameManager.dealerTurn();         
-                swapButtons();
-                updateWinnerLabel(); 
-            }
+            winnerLabel.setVisible(false); 
+            displayPlayerButtons();
+        });
+        
+        // Create the "Main Menu" button at the top left corner
+        mainMenuButton = new Button();
+        String mainMenuButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Menu_Button.png";
+        Image mainMenuImage = new Image(mainMenuButtonImagePath);
+        ImageView mainMenuImageView = new ImageView(mainMenuImage);
+        mainMenuButton.setGraphic(mainMenuImageView);
+        mainMenuButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+
+        mainMenuButton.layoutXProperty().bind(layout.widthProperty().multiply(0.05));  
+        mainMenuButton.layoutYProperty().bind(layout.heightProperty().multiply(0.05));  
+
+        
+        mainMenuButton.setOnAction(e -> {
+            mainApp.showMainMenu();
         });
 
         // Create HBox for Hit and Stay
         HBox buttonContainer = new HBox(30);  
         buttonContainer.setAlignment(Pos.CENTER);  
 
+        
         // Create the "Stay" button 
         stayButton = new Button();
         String stayButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Stay_Button.png"; 
@@ -106,6 +118,7 @@ public class StandardMode {
         stayButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
         stayButton.setVisible(false);  
 
+        
         // Create the "Hit" button (right side)
         hitButton = new Button();
         String hitButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Hit_Button.png"; 
@@ -115,13 +128,16 @@ public class StandardMode {
         hitButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
         hitButton.setVisible(false); 
 
+        
         // Add the buttons to the HBox
         buttonContainer.getChildren().addAll(stayButton, hitButton);
 
+        
         // Bind the position of the button container
         buttonContainer.layoutXProperty().bind(layout.widthProperty().subtract(buttonContainer.widthProperty()).divide(2));  
         buttonContainer.layoutYProperty().bind(layout.heightProperty().multiply(0.85));  
 
+        
         // Action for stay button
         stayButton.setOnAction(e -> {
             System.out.println("Stay button pressed");
@@ -129,6 +145,7 @@ public class StandardMode {
             swapButtons();
             updateWinnerLabel();  
         });
+        
         
         // Action for hit button
         hitButton.setOnAction(e -> {
@@ -141,6 +158,7 @@ public class StandardMode {
             }
         });
 
+        
         // Initialize the winner label
         winnerLabel = new Label("Start the game");
         winnerLabel.setTextFill(Color.WHITE);
@@ -149,7 +167,7 @@ public class StandardMode {
         winnerLabel.layoutXProperty().bind(layout.widthProperty().subtract(winnerLabel.widthProperty()).divide(2));
         winnerLabel.layoutYProperty().bind(layout.heightProperty().multiply(0.4));
 
-        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel);
+        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton);  // Add Main Menu button here
     }
     
     
@@ -158,7 +176,8 @@ public class StandardMode {
         hitButton.setVisible(false);  
         stayButton.setVisible(false);  
         dealButton.setVisible(true);
-        winnerLabel.setVisible(true);  
+        winnerLabel.setVisible(true); 
+        mainMenuButton.setVisible(true);
     }
 
     public Pane getLayout() {
@@ -171,4 +190,28 @@ public class StandardMode {
         winnerLabel.setText(winnerText);  
         winnerLabel.setVisible(true);  
     }
+    
+    public void displayPlayerButtons() {
+        
+        pause(0.6, () -> {  
+        	hitButton.setVisible(true);   
+            stayButton.setVisible(true); 
+            
+            if(gameManager.checkForBlackJack()) {
+                gameManager.dealerTurn();         
+                swapButtons();
+                updateWinnerLabel(); 
+            }
+        });
+    }
+    
+    public void pause(double seconds, Runnable action) {
+ 	    
+ 	    PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(seconds));
+ 	    pause.setOnFinished(e -> action.run());  
+ 	    pause.play();
+ 	}
+    
+    
 }
+

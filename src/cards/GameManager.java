@@ -4,8 +4,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.animation.PauseTransition;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+
+import java.time.Duration;
+
 import application.Main;
 import data.DBStatsHandler;
 import data.DBUserProfileHandler;
@@ -21,6 +25,7 @@ public class GameManager {
     private boolean isPlayerTurn;  
     private String gameResults;    
     private DBStatsHandler statsHandler;
+    private boolean doneDealing;
 
     // Constructor for player and dealer hands
     public GameManager(int deckCount, HBox playerHandContainer, HBox dealerHandContainer, Main mainApp) {
@@ -43,28 +48,17 @@ public class GameManager {
     
     // Start the game
     public void startGame() {
-    	
+    	setDoneDealing(false);
     	
         dealPlayerCard();
-        displayHands();
-        
-        
+                
         dealPlayerCard();
-        displayHands();
-        
-        
+               
         dealDealerCard();
-        displayHands();
-        
-        
+                
         dealDealerCard();
-        displayHands();
         
-        
-        
-        if(dealerHand.checkBlackJack()==true) {
-        	
-        }
+        displayHandsDelay();      
         
     }
     
@@ -104,8 +98,7 @@ public class GameManager {
     // Display the hands in the GUI using images
     private void displayHands() {
         playerHandContainer.getChildren().clear();
-        dealerHandContainer.getChildren().clear();
-
+        dealerHandContainer.getChildren().clear();   
         
         // Add player's cards
         for (Card card : playerHand.getHand()) {
@@ -123,7 +116,6 @@ public class GameManager {
             String cardImagePath;
 
             if (i == 0 && isPlayerTurn) {
-                // Show the first card as the back card during player's turn
                 cardImagePath = "file:assets/Cards/blue.png";  
             } else {
                 
@@ -137,6 +129,51 @@ public class GameManager {
             dealerHandContainer.getChildren().add(cardImageView);
         }
     }
+    
+    private void displayHandsDelay() {
+        playerHandContainer.getChildren().clear();
+        dealerHandContainer.getChildren().clear();
+
+        // Add player's cards with delay
+        for (int i = 0; i < playerHand.getHand().size(); i++) {
+            final int index = i;
+            pause(0.4 * i, () -> {
+                Card card = playerHand.getHand().get(index);
+                Image cardImage = new Image("file:assets/Cards/" + card.getId() + ".png");
+                ImageView cardImageView = new ImageView(cardImage);
+                cardImageView.setFitWidth(100);
+                cardImageView.setFitHeight(140);
+                playerHandContainer.getChildren().add(cardImageView);
+            });
+        }
+
+        // Add dealer's cards with delay
+        for (int i = 0; i < dealerHand.getHand().size(); i++) {
+            final int index = i;
+            
+            pause(0.2 * i, () -> {
+                Card card = dealerHand.getHand().get(index);
+                String cardImagePath;
+
+                if (index == 0 && isPlayerTurn) {
+                    
+                    cardImagePath = "file:assets/Cards/blue.png";
+                } else {
+                    cardImagePath = "file:assets/Cards/" + card.getId() + ".png";
+                }
+
+                Image cardImage = new Image(cardImagePath);
+                ImageView cardImageView = new ImageView(cardImage);
+                cardImageView.setFitWidth(100);
+                cardImageView.setFitHeight(140);
+                dealerHandContainer.getChildren().add(cardImageView);
+            });
+        }
+        
+        
+    }
+    
+    
 
     public void playerTurn() {
         
@@ -157,24 +194,17 @@ public class GameManager {
         isPlayerTurn = false;  
         displayHands();  
 
-        while (getDealerHandValue() < 17) {
+        while (getDealerHandValue() < 17 && checkForBlackJack() == false) {
             System.out.println("Dealer hits.");
             dealDealerCard();
             displayHands();  
-        }
-
-        // Check if dealer busts
-        if (getDealerHandValue() > 21) {
-            System.out.println("Dealer busts!");
-            gameResults = "Player wins, Dealer Busted";  
-            statsHandler.incrementWins(mainApp.getActiveProfileId());  
-            setWinner(gameResults);  
-            return;  
-        } else {
+        }      
+        
             System.out.println("Dealer stands with hand value: " + getDealerHandValue());
             determineWinner();  
-        }
+        
     }
+
 
     
     
@@ -198,27 +228,7 @@ public class GameManager {
         int playerValue = getPlayerHandValue();
         int dealerValue = getDealerHandValue();
 
-        // Debugging output for player's hand ranks
-        System.out.println("Player Hand: " + getPlayerHandValue());
-        System.out.print("Player Cards: ");
-        for (Card card : playerHand.getHand()) {
-            System.out.print(card.getRank() + " ");  // Prints the rank of each card in the player's hand
             
-            System.out.println();
-        }
-        
-        
-        System.out.println();  // Newline for better readability
-        System.out.println();
-        // Debugging output for dealer's hand ranks
-        System.out.println("Dealer Hand: " + getDealerHandValue());
-        System.out.print("Dealer Cards: ");
-        for (Card card : dealerHand.getHand()) {
-            System.out.print(card.getRank() + " ");  // Prints the rank of each card in the dealer's hand
-        }
-        System.out.println();  // Newline for better readability
-        System.out.println();
-        
         if (playerValue > 21) {
             gameResults = "Dealer wins, Player Busted";  // Player busts, dealer wins
             statsHandler.incrementLosses(mainApp.getActiveProfileId());
@@ -230,11 +240,11 @@ public class GameManager {
         } else if (playerValue > dealerValue) {
             gameResults = "Player wins";  // Player wins
             statsHandler.incrementWins(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " PLAYER WINS >");
+            System.out.println(mainApp.getActiveProfileId() + " PLAYER WINS HIGH CARD");
         } else if (dealerValue > playerValue) {
             gameResults = "Dealer Wins";  // Dealer wins
             statsHandler.incrementLosses(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " DEALER WINS >");
+            System.out.println(mainApp.getActiveProfileId() + " DEALER WINS HIGH CARD");
         } else {
             gameResults = "Push";  
             System.out.println(mainApp.getActiveProfileId() + " PUSH");
@@ -266,14 +276,20 @@ public class GameManager {
  		
  	}
  	
- 	public static void wait(int time) {
- 		
- 		try { 		   
- 		    Thread.sleep(time);
- 		} catch (InterruptedException e) {
- 		    e.printStackTrace();
- 		}
- 		
- 	}
  	
+
+ 	public void pause(double seconds, Runnable action) {
+ 	    // Convert seconds to milliseconds for the pause duration
+ 	    PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(seconds));
+ 	    pause.setOnFinished(e -> action.run());  // Run the action after the pause
+ 	    pause.play();
+ 	}
+
+ 	public void setDoneDealing(boolean doneDealing) {
+        this.doneDealing = doneDealing;
+    }
+ 	
+ 	public boolean getDoneDealing() {
+ 		return doneDealing;
+ 	}
 }
