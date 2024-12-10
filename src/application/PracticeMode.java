@@ -1,5 +1,6 @@
 package application;
 
+import javafx.animation.PauseTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,22 +14,21 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.control.Label;
+import javafx.scene.control.Label;  // For winner message
 import cards.PracticeGameManager;
-import cards.PlayerHand;
-import cards.DealerHand;
 
 public class PracticeMode {
     private Pane layout;
     private Main mainApp;
-    private PracticeGameManager practiceGameManager; // Use PracticeGameManager
+    private PracticeGameManager gameManager;
     private HBox playerHandContainer;
     private HBox dealerHandContainer;
 
     private Button dealButton;
     private Button hitButton;
     private Button stayButton;
-    private Label winnerLabel;
+    private Button mainMenuButton;  
+    private Label winnerLabel; 
 
     public PracticeMode(Main mainApp) {
         this.mainApp = mainApp;
@@ -54,42 +54,52 @@ public class PracticeMode {
 
         // Position hands on the screen
         playerHandContainer.layoutXProperty().bind(layout.widthProperty().subtract(playerHandContainer.widthProperty()).divide(2));  
-        playerHandContainer.layoutYProperty().bind(layout.heightProperty().multiply(0.7));  // Positioned below center
+        playerHandContainer.layoutYProperty().bind(layout.heightProperty().multiply(0.7));  
         
         dealerHandContainer.layoutXProperty().bind(layout.widthProperty().subtract(dealerHandContainer.widthProperty()).divide(2));
-        dealerHandContainer.layoutYProperty().bind(layout.heightProperty().multiply(0.2));  // Positioned above center
+        dealerHandContainer.layoutYProperty().bind(layout.heightProperty().multiply(0.2));  
 
         layout.getChildren().addAll(playerHandContainer, dealerHandContainer);
 
-        // Initialize PracticeGameManager for practice mode
-        practiceGameManager = new PracticeGameManager(1, playerHandContainer, dealerHandContainer, mainApp); // 1 deck for practice
+        // Initialize PracticeGameManager
+        gameManager = new PracticeGameManager(10, playerHandContainer, dealerHandContainer, mainApp);
 
         // Create the "Deal" button 
         dealButton = new Button();
-        String dealButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/simple_ui_button_round_128_down_1.png"; 
+        String dealButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Deal_Button.png"; 
         Image dealButtonImage = new Image(dealButtonImagePath);
         ImageView dealButtonImageView = new ImageView(dealButtonImage);
         dealButton.setGraphic(dealButtonImageView);
         dealButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        // Position the "Deal" button exactly in the center
-        dealButton.layoutXProperty().bind(layout.widthProperty().subtract(dealButton.widthProperty()).divide(2));  // Center horizontally
-        dealButton.layoutYProperty().bind(layout.heightProperty().subtract(dealButton.heightProperty()).divide(2));  // Center vertically
+        // Position the Deal button 
+        dealButton.layoutXProperty().bind(layout.widthProperty().subtract(dealButton.widthProperty()).divide(2));  
+        dealButton.layoutYProperty().bind(layout.heightProperty().subtract(dealButton.heightProperty()).divide(2));  
 
         dealButton.setOnAction(e -> {
-            practiceGameManager.resetGame();  
-            practiceGameManager.startGame();  
+            System.out.print(mainApp.getActiveProfileId() + "PRACTICE MODE");
+            gameManager.resetGame();  
+            gameManager.startGame();  
             dealButton.setVisible(false);  
-            hitButton.setVisible(true);   
-            stayButton.setVisible(true); 
+            mainMenuButton.setVisible(false);  
             winnerLabel.setText("Start the game");  
-            winnerLabel.setVisible(false);  
-            
-            if(practiceGameManager.checkForBlackJack()) {
-                practiceGameManager.dealerTurn();         
-                swapButtons();
-                updateWinnerLabel(); 
-            }
+            winnerLabel.setVisible(false); 
+            displayPlayerButtons();
+        });
+        
+        // Create the "Main Menu" button at the top left corner
+        mainMenuButton = new Button();
+        String mainMenuButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Menu_Button.png";
+        Image mainMenuImage = new Image(mainMenuButtonImagePath);
+        ImageView mainMenuImageView = new ImageView(mainMenuImage);
+        mainMenuButton.setGraphic(mainMenuImageView);
+        mainMenuButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+
+        mainMenuButton.layoutXProperty().bind(layout.widthProperty().multiply(0.05));  
+        mainMenuButton.layoutYProperty().bind(layout.heightProperty().multiply(0.05));  
+
+        mainMenuButton.setOnAction(e -> {
+            mainApp.showMainMenu();
         });
 
         // Create HBox for Hit and Stay
@@ -98,16 +108,16 @@ public class PracticeMode {
 
         // Create the "Stay" button 
         stayButton = new Button();
-        String stayButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/simple_ui_button_round_128_down_2.png"; 
+        String stayButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Stay_Button.png"; 
         Image stayButtonImage = new Image(stayButtonImagePath);
         ImageView stayButtonImageView = new ImageView(stayButtonImage);
         stayButton.setGraphic(stayButtonImageView);
         stayButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
         stayButton.setVisible(false);  
 
-        // Create the "Hit" button (right side)
+        // Create the "Hit" button
         hitButton = new Button();
-        String hitButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/simple_ui_button_round_128_down_0.png"; 
+        String hitButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Hit_Button.png"; 
         Image hitButtonImage = new Image(hitButtonImagePath);
         ImageView hitButtonImageView = new ImageView(hitButtonImage);
         hitButton.setGraphic(hitButtonImageView);
@@ -117,30 +127,29 @@ public class PracticeMode {
         // Add the buttons to the HBox
         buttonContainer.getChildren().addAll(stayButton, hitButton);
 
-        // Bind the position of the button container
+        // Position button container
         buttonContainer.layoutXProperty().bind(layout.widthProperty().subtract(buttonContainer.widthProperty()).divide(2));  
         buttonContainer.layoutYProperty().bind(layout.heightProperty().multiply(0.85));  
 
-        //action for stay button
+        // Action for Stay
         stayButton.setOnAction(e -> {
             System.out.println("Stay button pressed");
-            practiceGameManager.dealerTurn();         
+            gameManager.dealerTurn();         
             swapButtons();
             updateWinnerLabel();  
         });
-        
-        //action for hit button
+
+        // Action for Hit
         hitButton.setOnAction(e -> {
             System.out.println("Hit button pressed");
-            practiceGameManager.playerTurn();  
-            
-            if(practiceGameManager.getPlayerHandValue() > 21) {
+            gameManager.playerTurn();  
+            if(gameManager.getPlayerHandValue() > 21) {
                 swapButtons();
                 updateWinnerLabel();  
             }
         });
 
-        // Initialize the winner label
+        // Winner Label
         winnerLabel = new Label("Start the game");
         winnerLabel.setTextFill(Color.WHITE);
         winnerLabel.setStyle("-fx-font-size: 24px;");
@@ -148,26 +157,42 @@ public class PracticeMode {
         winnerLabel.layoutXProperty().bind(layout.widthProperty().subtract(winnerLabel.widthProperty()).divide(2));
         winnerLabel.layoutYProperty().bind(layout.heightProperty().multiply(0.4));
 
-        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel);
+        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton);
     }
     
-    
-    // Change visibility of the buttons when game starts
     public void swapButtons() {
         hitButton.setVisible(false);  
         stayButton.setVisible(false);  
         dealButton.setVisible(true);
-        winnerLabel.setVisible(true);  
+        winnerLabel.setVisible(true); 
+        mainMenuButton.setVisible(true);
     }
 
     public Pane getLayout() {
         return layout;
     }
 
-    //sets the winner text
     public void updateWinnerLabel() {
-        String winnerText = practiceGameManager.getWinner();  
+        String winnerText = gameManager.getWinner();  
         winnerLabel.setText(winnerText);  
         winnerLabel.setVisible(true);  
+    }
+    
+    public void displayPlayerButtons() {
+        pause(0.6, () -> {  
+            hitButton.setVisible(true);   
+            stayButton.setVisible(true); 
+            if(gameManager.checkForBlackJack()) {
+                gameManager.dealerTurn();         
+                swapButtons();
+                updateWinnerLabel(); 
+            }
+        });
+    }
+    
+    public void pause(double seconds, Runnable action) {
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(seconds));
+        pause.setOnFinished(e -> action.run());  
+        pause.play();
     }
 }
