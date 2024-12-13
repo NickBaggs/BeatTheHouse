@@ -233,18 +233,22 @@ public class GameManager {
             gameResults = "Dealer wins, Player Busted";  // Player busts, dealer wins
             statsHandler.incrementLosses(mainApp.getActiveProfileId());
             System.out.println(mainApp.getActiveProfileId() + " PLAYER BUST");
+            
         } else if (dealerValue > 21) {
             gameResults = "Player wins, Dealer Busted";  // Dealer busts, player wins
             statsHandler.incrementWins(mainApp.getActiveProfileId());
             System.out.println(mainApp.getActiveProfileId() + " DEALER BUST");
+            
         } else if (playerValue > dealerValue) {
             gameResults = "Player wins";  // Player wins
             statsHandler.incrementWins(mainApp.getActiveProfileId());
             System.out.println(mainApp.getActiveProfileId() + " PLAYER WINS HIGH CARD");
+            
         } else if (dealerValue > playerValue) {
             gameResults = "Dealer Wins";  // Dealer wins
             statsHandler.incrementLosses(mainApp.getActiveProfileId());
             System.out.println(mainApp.getActiveProfileId() + " DEALER WINS HIGH CARD");
+            
         } else {
             gameResults = "Push";  
             System.out.println(mainApp.getActiveProfileId() + " PUSH");

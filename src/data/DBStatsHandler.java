@@ -67,6 +67,71 @@ public class DBStatsHandler {
     }
 
     
+ // Method to add (or subtract) an amount from chip_count
+    public void addToChipCount(int userProfileId, int amount) {
+        String query = "UPDATE stats SET chip_count = chip_count + ? WHERE user_profile_id = ?";
+        
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setInt(1, amount);  // Add or subtract chips (amount can be positive or negative)
+            stmt.setInt(2, userProfileId);  
+            stmt.executeUpdate();
+
+            
+            System.out.println("Chip count updated by " + amount + " for user profile ID: " + userProfileId);
+
+        } catch (SQLException e) {
+            System.out.println("Error updating chip count for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+    }
+    
+    
+ // Method to add (or subtract) an amount from chips_won
+    public void addToChipsWon(int userProfileId, int amount) {
+        String query = "UPDATE stats SET chips_won = chips_won + ? WHERE user_profile_id = ?";
+
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, amount);  // Add or subtract chips won
+            stmt.setInt(2, userProfileId);
+            stmt.executeUpdate();
+
+            // Log confirmation
+            System.out.println("Chips won updated by " + amount + " for user profile ID: " + userProfileId);
+
+        } catch (SQLException e) {
+            System.out.println("Error updating chips won for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+    }
+
+    
+    // Method to add (or subtract) an amount from chips_lost
+    public void addToChipsLost(int userProfileId, int amount) {
+        String query = "UPDATE stats SET chips_lost = chips_lost + ? WHERE user_profile_id = ?";
+
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, amount);  // Add or subtract chips lost
+            stmt.setInt(2, userProfileId);
+            stmt.executeUpdate();
+
+           
+            System.out.println("Chips lost updated by " + amount + " for user profile ID: " + userProfileId);
+
+           
+        } catch (SQLException e) {
+            System.out.println("Error updating chips lost for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+    }
+
+
+    
     
     // Method to update chip count (add or subtract)
     public void updateChipCount(int userProfileId, int chipsChange) {
@@ -86,7 +151,7 @@ public class DBStatsHandler {
 
     
     
-    // Other methods to update stats (similar to the original code)
+    // method to update chips won 
     public void updateChipsWon(int userProfileId, int chipsWon) {
         String query = "UPDATE stats SET chips_won = ? WHERE user_profile_id = ?";
 

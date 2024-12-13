@@ -21,7 +21,9 @@ public class StatsScreen {
     private Label totalChipsWonLabel;
     private Label totalChipsLostLabel;
     private Label lastLoginLabel;
-
+    private Label timesBankruptLabel;
+    private Label highestChipCountLabel;
+    
     public StatsScreen(Main mainApp) {
         this.mainApp = mainApp;
         layout = new Pane();
@@ -42,11 +44,12 @@ public class StatsScreen {
         titleLabel.setFont(new Font("Arial", 36));
         titleLabel.setFill(javafx.scene.paint.Color.WHITE);
 
-        titleLabel.layoutXProperty().bind(layout.widthProperty().subtract(titleLabel.prefWidth(-1)).divide(2).subtract(10));
-        titleLabel.setTranslateY(60);
+        // Position the title near the top and center it horizontally
+        titleLabel.layoutXProperty().bind(layout.widthProperty().subtract(titleLabel.prefWidth(-1)).divide(2));
+        titleLabel.setTranslateY(60); // Adjust to original vertical position
 
-     
-        int activeUserId = (mainApp.getActiveProfileId());
+        // Fetch the active user ID
+        int activeUserId = mainApp.getActiveProfileId();
         DBStatsHandler dbStatsHandler = new DBStatsHandler();
 
         // Fetch the stats for the active user
@@ -56,6 +59,8 @@ public class StatsScreen {
         int chipsWon = dbStatsHandler.getChipsWon(activeUserId);
         int chipsLost = dbStatsHandler.getChipsLost(activeUserId);
         int totalWinnings = dbStatsHandler.getTotalWinnings(activeUserId);
+        int timesBankrupt = dbStatsHandler.getTimesBankrupt(activeUserId);
+        int highestChipCount = dbStatsHandler.getHighestChipCount(activeUserId);
 
         // Initialize the stats labels
         winsLabel = new Label("Wins: " + wins);
@@ -64,6 +69,8 @@ public class StatsScreen {
         totalChipsWonLabel = new Label("Total Chips Won: " + chipsWon);
         totalChipsLostLabel = new Label("Total Chips Lost: " + chipsLost);
         lastLoginLabel = new Label("Total Winnings: " + totalWinnings);
+        timesBankruptLabel = new Label("Times Bankrupt: " + timesBankrupt);
+        highestChipCountLabel = new Label("Highest Chip Count: " + highestChipCount);
 
         // Set the style for the labels
         setLabelStyle(winsLabel);
@@ -72,41 +79,47 @@ public class StatsScreen {
         setLabelStyle(totalChipsWonLabel);
         setLabelStyle(totalChipsLostLabel);
         setLabelStyle(lastLoginLabel);
+        setLabelStyle(timesBankruptLabel);
+        setLabelStyle(highestChipCountLabel);
 
         // Create a VBox to arrange the labels vertically
-        VBox statsVBox = new VBox(15); 
+        VBox statsVBox = new VBox(15);
         statsVBox.setAlignment(Pos.CENTER);
         statsVBox.getChildren().addAll(
                 winsLabel, lossesLabel, chipsLabel,
-                totalChipsWonLabel, totalChipsLostLabel, lastLoginLabel
+                totalChipsWonLabel, totalChipsLostLabel, lastLoginLabel,
+                timesBankruptLabel, highestChipCountLabel
         );
 
-       
-        statsVBox.layoutXProperty().bind(layout.widthProperty().subtract(statsVBox.prefWidth(-1)).divide(2).subtract(110));
-        statsVBox.layoutYProperty().bind(layout.heightProperty().subtract(statsVBox.prefHeight(-1)).divide(2).subtract(110));
+        // Position the VBox and set labels' vertical positions manually
+        statsVBox.setTranslateY(250); 
+        statsVBox.setTranslateX(-125);
+        
+        // Center the VBox 
+        statsVBox.layoutXProperty().bind(layout.widthProperty().subtract(statsVBox.prefWidth(-1)).divide(2));
 
-       
+        // Create a button to return to the main menu
         Button showMenuButton = new Button();
         Image buttonImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Menu_Button.png");
         ImageView buttonImageView = new ImageView(buttonImage);
-        
-
         showMenuButton.setGraphic(buttonImageView);
         showMenuButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        showMenuButton.setLayoutX(20); 
-        showMenuButton.setLayoutY(20); 
+        // Position the menu button at the top left
+        showMenuButton.setLayoutX(20);
+        showMenuButton.setLayoutY(20);
 
         // Menu Button action
         showMenuButton.setOnAction(e -> {
             System.out.println("Show Menu Button Clicked!");
-            mainApp.showMainMenu(); 
+            mainApp.showMainMenu(); // Navigate back to the main menu
         });
 
-        
+        // Add all components to the layout
         layout.getChildren().addAll(titleLabel, statsVBox, showMenuButton);
     }
 
+    // Helper method to set the style of labels
     private void setLabelStyle(Label label) {
         label.setFont(new Font("Arial", 24));
         label.setTextFill(javafx.scene.paint.Color.WHITE);
