@@ -89,7 +89,7 @@ public class DBStatsHandler {
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
-            stmt.setInt(1, amount);  // Add or subtract chips (amount can be positive or negative)
+            stmt.setInt(1, amount);  
             stmt.setInt(2, userProfileId);  
             stmt.executeUpdate();
 
@@ -110,11 +110,11 @@ public class DBStatsHandler {
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, amount);  // Add or subtract chips won
+            stmt.setInt(1, amount);  
             stmt.setInt(2, userProfileId);
             stmt.executeUpdate();
 
-            // Log confirmation
+            
             System.out.println("Chips won updated by " + amount + " for user profile ID: " + userProfileId);
 
         } catch (SQLException e) {
@@ -131,7 +131,7 @@ public class DBStatsHandler {
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, amount);  // Add or subtract chips lost
+            stmt.setInt(1, amount); 
             stmt.setInt(2, userProfileId);
             stmt.executeUpdate();
 

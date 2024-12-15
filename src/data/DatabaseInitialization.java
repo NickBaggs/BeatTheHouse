@@ -117,7 +117,7 @@ public class DatabaseInitialization {
             stmt.setInt(5, 0); 
             stmt.setInt(6, 0); 
             stmt.setInt(7, 0); 
-            stmt.setInt(8, 0); 
+            stmt.setInt(8, 5000); 
             stmt.setInt(9, profileId); 
 
             stmt.executeUpdate();

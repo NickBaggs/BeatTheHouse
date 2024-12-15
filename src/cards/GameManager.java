@@ -30,7 +30,7 @@ public class GameManager {
 
     // Constructor for player and dealer hands
     public GameManager(int deckCount, HBox playerHandContainer, HBox dealerHandContainer, Main mainApp) {
-        this.mainApp = mainApp;  // Store the Main instance for later use
+        this.mainApp = mainApp;  
         this.deckCount = deckCount;
         this.deck = new Deck();
         this.deck.addDecks(deckCount);
@@ -43,7 +43,7 @@ public class GameManager {
         this.dealerHandContainer = dealerHandContainer;
         this.isPlayerTurn = true;
         
-        this.statsHandler = new DBStatsHandler(); // Initialize statsHandler here
+        this.statsHandler = new DBStatsHandler(); 
         updateHighestChipCount();
     }
 
@@ -232,19 +232,22 @@ public class GameManager {
 
             
         if (playerValue > 21) {
-            gameResults = "Dealer wins, Player Busted";  // Player busts, dealer wins
+            gameResults = "Dealer wins, Player Busted";  
             statsHandler.incrementLosses(mainApp.getActiveProfileId());
             System.out.println(mainApp.getActiveProfileId() + " PLAYER BUST " + getBetAmount());
             statsHandler.addToChipsLost(mainApp.getActiveProfileId(),getBetAmount());
             updateHighestChipCount();
+            
+            
         } else if (dealerValue > 21) {
-            gameResults = "Player wins, Dealer Busted";  // Dealer busts, player wins
+            gameResults = "Player wins, Dealer Busted";  
             statsHandler.incrementWins(mainApp.getActiveProfileId());
             System.out.println(mainApp.getActiveProfileId() + " DEALER BUST " + getBetAmount());
             
             statsHandler.addToChipCount(mainApp.getActiveProfileId(),getBetAmount()*2 );
             statsHandler.addToChipsWon(mainApp.getActiveProfileId(),getBetAmount());
             updateHighestChipCount();
+            
             
         } else if (playerValue > dealerValue) {
             gameResults = "Player wins";  // Player wins
@@ -253,12 +256,16 @@ public class GameManager {
             statsHandler.addToChipCount(mainApp.getActiveProfileId(),getBetAmount()*2 );
             statsHandler.addToChipsWon(mainApp.getActiveProfileId(),getBetAmount());
             updateHighestChipCount();
+            
+            
         } else if (dealerValue > playerValue) {
             gameResults = "Dealer Wins";  // Dealer wins
             statsHandler.incrementLosses(mainApp.getActiveProfileId());
             System.out.println(mainApp.getActiveProfileId() + " DEALER WINS HIGH CARD " + getBetAmount());
             statsHandler.addToChipsLost(mainApp.getActiveProfileId(),getBetAmount());
             updateHighestChipCount();
+            
+            
         } else {
             gameResults = "Push";  
             System.out.println(mainApp.getActiveProfileId() + " PUSH " + getBetAmount());
@@ -294,10 +301,11 @@ public class GameManager {
  	
  	
 
+ 	//used to delay the dealing of cards
  	public void pause(double seconds, Runnable action) {
- 	    // Convert seconds to milliseconds for the pause duration
+ 	   
  	    PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(seconds));
- 	    pause.setOnFinished(e -> action.run());  // Run the action after the pause
+ 	    pause.setOnFinished(e -> action.run());  
  	    pause.play();
  	}
 

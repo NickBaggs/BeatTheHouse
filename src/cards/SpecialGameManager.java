@@ -5,13 +5,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.animation.PauseTransition;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-
 import application.Main;
 import data.DBStatsHandler;
 
-public class PracticeGameManager {
+public class SpecialGameManager {
     private Main mainApp;
     private Deck deck;
     private PlayerHand playerHand;
@@ -21,11 +18,11 @@ public class PracticeGameManager {
     private HBox dealerHandContainer;
     private boolean isPlayerTurn;
     private String gameResults;
-   
+    
     private boolean doneDealing;
 
     // Constructor for player and dealer hands
-    public PracticeGameManager(int deckCount, HBox playerHandContainer, HBox dealerHandContainer, Main mainApp) {
+    public SpecialGameManager(int deckCount, HBox playerHandContainer, HBox dealerHandContainer, Main mainApp) {
         this.mainApp = mainApp;
         this.deckCount = deckCount;
         this.deck = new Deck();
@@ -39,7 +36,7 @@ public class PracticeGameManager {
         this.dealerHandContainer = dealerHandContainer;
         this.isPlayerTurn = true;
 
-        
+       
     }
 
     // Start the game
@@ -99,7 +96,7 @@ public class PracticeGameManager {
             String cardImagePath;
 
             if (i == 0 && isPlayerTurn) {
-                cardImagePath = "file:assets/Cards/blue.png";
+                cardImagePath = "file:assets/Cards/blue.png";  // Hide the dealer's first card until player's turn is over
             } else {
                 cardImagePath = "file:assets/Cards/" + card.getId() + ".png";
             }
@@ -116,6 +113,7 @@ public class PracticeGameManager {
         playerHandContainer.getChildren().clear();
         dealerHandContainer.getChildren().clear();
 
+        
         for (int i = 0; i < playerHand.getHand().size(); i++) {
             final int index = i;
             pause(0.4 * i, () -> {
@@ -136,7 +134,7 @@ public class PracticeGameManager {
                 String cardImagePath;
 
                 if (index == 0 && isPlayerTurn) {
-                    cardImagePath = "file:assets/Cards/blue.png";
+                    cardImagePath = "file:assets/Cards/blue.png";  // Hide the dealer's first card
                 } else {
                     cardImagePath = "file:assets/Cards/" + card.getId() + ".png";
                 }
@@ -188,19 +186,16 @@ public class PracticeGameManager {
 
         if (playerValue > 21) {
             gameResults = "Dealer wins, Player Busted";
-           
         } else if (dealerValue > 21) {
             gameResults = "Player wins, Dealer Busted";
-            
         } else if (playerValue > dealerValue) {
             gameResults = "Player wins";
-            
         } else if (dealerValue > playerValue) {
             gameResults = "Dealer Wins";
-            
         } else {
             gameResults = "Push";
         }
+
         setWinner(gameResults);
     }
 

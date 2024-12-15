@@ -79,22 +79,31 @@ public class Main extends Application {
     // Show Standard Mode screen
     public void showStandardModeScreen() {
         StandardMode standardModeScreen = new StandardMode(this);
-        Scene scene = new Scene(standardModeScreen.getLayout(), 1200, 800);  // Adjust size as needed
+        Scene scene = new Scene(standardModeScreen.getLayout(), 1200, 800);  
         primaryStage.setScene(scene);
     }
     
     public void showPracticeModeScreen() {
         PracticeMode practiceModeScreen = new PracticeMode(this);
-        Scene scene = new Scene(practiceModeScreen.getLayout(), 1200, 800);  // Adjust size as needed
+        Scene scene = new Scene(practiceModeScreen.getLayout(), 1200, 800);  
         primaryStage.setScene(scene);
     }
     
     public void showStatsScreen() {
         StatsScreen statsScreen = new StatsScreen(this);
-        Scene scene = new Scene(statsScreen.getLayout(), 1200, 800);  // Adjust size as needed
+        Scene scene = new Scene(statsScreen.getLayout(), 1200, 800);  
         primaryStage.setScene(scene);
+        
+        
+    }
+   
+    public void showSpecialModeScreen() {
+        SpecialMode specialMode = new SpecialMode(this);  
+        Scene scene = new Scene(specialMode.getLayout(), 1200, 800);  
+        primaryStage.setScene(scene); 
     }
 
+    
     public static void main(String[] args) {
         launch(args);
     }

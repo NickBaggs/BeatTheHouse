@@ -194,7 +194,7 @@ public class DBUserProfileHandler {
             System.out.println("Error fetching table appearance for ID: " + profileId);
             e.printStackTrace();
         }
-        return -1; // -1 means no data found
+        return -1; 
     }
 
     
@@ -216,6 +216,28 @@ public class DBUserProfileHandler {
             System.out.println("Error fetching profile icon for ID: " + profileId);
             e.printStackTrace();
         }
-        return -1; // -1 means no data found
+        return -1; 
+    }
+    
+    // Delete user profile
+    public void deleteProfile(int profileId) {
+        String query = "UPDATE user_profile SET profile_name = NULL WHERE user_profile_id = ?";
+
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, profileId);  
+
+            int rowsUpdated = stmt.executeUpdate();  
+
+            if (rowsUpdated > 0) {
+                System.out.println("Profile name set to null for user profile ID: " + profileId);
+            } else {
+                System.out.println("No profile found for user profile ID: " + profileId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error updating profile for user profile ID: " + profileId);
+        }
     }
 }

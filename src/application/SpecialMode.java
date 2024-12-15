@@ -15,12 +15,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Label;  // For winner message
-import cards.PracticeGameManager;
+import cards.SpecialGameManager; // Change this to the correct SpecialMode manager
 
-public class PracticeMode {
+public class SpecialMode {
     private Pane layout;
     private Main mainApp;
-    private PracticeGameManager gameManager;
+    private SpecialGameManager gameManager; 
     private HBox playerHandContainer;
     private HBox dealerHandContainer;
 
@@ -28,9 +28,10 @@ public class PracticeMode {
     private Button hitButton;
     private Button stayButton;
     private Button mainMenuButton;  
+    private Button specialButton;  
     private Label winnerLabel; 
 
-    public PracticeMode(Main mainApp) {
+    public SpecialMode(Main mainApp) {
         this.mainApp = mainApp;
         layout = new Pane();  
 
@@ -61,10 +62,10 @@ public class PracticeMode {
 
         layout.getChildren().addAll(playerHandContainer, dealerHandContainer);
 
-        // Initialize PracticeGameManager
-        gameManager = new PracticeGameManager(10, playerHandContainer, dealerHandContainer, mainApp);
+        // Initialize SpecialGameManager 
+        gameManager = new SpecialGameManager(10, playerHandContainer, dealerHandContainer, mainApp);
 
-        // Create the "Deal" button 
+        // Create the Deal button 
         dealButton = new Button();
         String dealButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Deal_Button.png"; 
         Image dealButtonImage = new Image(dealButtonImagePath);
@@ -77,7 +78,7 @@ public class PracticeMode {
         dealButton.layoutYProperty().bind(layout.heightProperty().subtract(dealButton.heightProperty()).divide(2));  
 
         dealButton.setOnAction(e -> {
-            System.out.print(mainApp.getActiveProfileId() + "PRACTICE MODE");
+            System.out.print(mainApp.getActiveProfileId() + "SPECIAL MODE");
             gameManager.resetGame();  
             gameManager.startGame();  
             dealButton.setVisible(false);  
@@ -87,7 +88,7 @@ public class PracticeMode {
             displayPlayerButtons();
         });
         
-        // Create the main Menu button 
+        // Create the Main Menu button 
         mainMenuButton = new Button();
         String mainMenuButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Menu_Button.png";
         Image mainMenuImage = new Image(mainMenuButtonImagePath);
@@ -102,7 +103,24 @@ public class PracticeMode {
             mainApp.showMainMenu();
         });
 
-        // Create HBox for Hit and Stay
+        // Create Special Button
+        specialButton = new Button();
+        String specialButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Special_Button.png"; // New asset
+        Image specialButtonImage = new Image(specialButtonImagePath);
+        ImageView specialButtonImageView = new ImageView(specialButtonImage);
+        specialButton.setGraphic(specialButtonImageView);
+        specialButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+
+        // Position the Special Button
+        specialButton.setTranslateX(300);  
+        specialButton.setTranslateY(200);  
+
+        // Action for Special Button
+        specialButton.setOnAction(e -> {
+            System.out.println("Special Button clicked");
+        });
+
+        // HBox for Hit and Stay
         HBox buttonContainer = new HBox(30);  
         buttonContainer.setAlignment(Pos.CENTER);  
 
@@ -157,9 +175,9 @@ public class PracticeMode {
         winnerLabel.layoutXProperty().bind(layout.widthProperty().subtract(winnerLabel.widthProperty()).divide(2));
         winnerLabel.layoutYProperty().bind(layout.heightProperty().multiply(0.4));
 
-        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton);
+        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton, specialButton); // Add specialButton here
     }
-    //Changes visibility of buttons
+    
     public void swapButtons() {
         hitButton.setVisible(false);  
         stayButton.setVisible(false);  

@@ -14,7 +14,7 @@ public class MainMenu {
     private StackPane layout;
     private Main mainApp;
     private DBStatsHandler statsHandler;
-    private Label chipsCountLabel;  // Declare chipsCountLabel
+    private Label chipsCountLabel;  
 
     public MainMenu(Main mainApp) {
         this.statsHandler = new DBStatsHandler();
@@ -35,65 +35,68 @@ public class MainMenu {
 
         layout.setBackground(new Background(background));
 
-        // Title Text for MainMenu
+        // Title Text 
         Text titleLabel = new Text("Select A Mode");
         titleLabel.setFont(new Font("Arial", 36));
         titleLabel.setFill(javafx.scene.paint.Color.WHITE);
 
-        // Position the title in the center
+        // Position the title 
         titleLabel.setTranslateY(-250);
 
-        // Create HBox for button positioning
+        // Create HBox 
         HBox buttonContainer = new HBox(30);
         buttonContainer.setAlignment(javafx.geometry.Pos.CENTER);
 
-        // Create special powers mode button
-        Button greenButton = new Button();
-        Image greenImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Special_Button.png");
-        ImageView greenImageView = new ImageView(greenImage);
-        greenButton.setGraphic(greenImageView);
-        greenButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+        // Create Special Mode button
+        Button specialButton = new Button();
+        Image specialImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Special_Button.png");
+        ImageView specialImageView = new ImageView(specialImage);
+        specialButton.setGraphic(specialImageView);
+        specialButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        // Create practice mode button
-        Button blueButton = new Button();
-        Image blueImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Practice_Button.png");
-        ImageView blueImageView = new ImageView(blueImage);
-        blueButton.setGraphic(blueImageView);
-        blueButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+        // Create Practice Mode button 
+        Button practiceButton = new Button();
+        Image practiceImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Practice_Button.png");
+        ImageView practiceImageView = new ImageView(practiceImage);
+        practiceButton.setGraphic(practiceImageView);
+        practiceButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        // Create Standard Mode button
-        Button redButton = new Button();
-        Image redImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Standard_Button.png");
-        ImageView redImageView = new ImageView(redImage);
-        redButton.setGraphic(redImageView);
-        redButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+        // Create Standard Mode button 
+        Button standardButton = new Button();
+        Image standardImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Standard_Button.png");
+        ImageView standardImageView = new ImageView(standardImage);
+        standardButton.setGraphic(standardImageView);
+        standardButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
         // Add buttons to the HBox
-        buttonContainer.getChildren().addAll(greenButton, blueButton, redButton);
+        buttonContainer.getChildren().addAll(specialButton, practiceButton, standardButton);
 
         // Position the button container
         buttonContainer.setTranslateY(50);
 
-        // Button actions
-        greenButton.setOnAction(e -> System.out.println("Special Powers Mode clicked"));
-
+        // Action for Special Mode button
+        specialButton.setOnAction(e -> {
+            System.out.println("Special Mode clicked");
+            mainApp.showSpecialModeScreen();
+        });
+        
         // Action for Practice Mode button
-        blueButton.setOnAction(e -> {
+        practiceButton.setOnAction(e -> {
             System.out.println("Practice Mode clicked");
             mainApp.showPracticeModeScreen();
         });
 
-        // Standard Mode
-        redButton.setOnAction(e -> mainApp.showStandardModeScreen());
+        // Action for Standard Mode button
+        standardButton.setOnAction(e -> mainApp.showStandardModeScreen());
 
-        // //profile screen button
+        // Profile screen button
         Button showProfileButton = new Button();
         Image profileImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Profile_Button.png");
         ImageView profileImageView = new ImageView(profileImage);
         showProfileButton.setGraphic(profileImageView);
         showProfileButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        // Position to the top-left corner
+        // Position profile button
         showProfileButton.setTranslateX(-500); 
         showProfileButton.setTranslateY(-300);
 
@@ -123,7 +126,6 @@ public class MainMenu {
         bankruptButton.setGraphic(bankruptImageView);
         bankruptButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        
         bankruptButton.setTranslateX(00); 
         bankruptButton.setTranslateY(250);  
         bankruptButton.setVisible(checkBankrupt());
@@ -146,11 +148,9 @@ public class MainMenu {
         chipsCountLabel.setTextFill(javafx.scene.paint.Color.WHITE);
         chipsCountLabel.setStyle("-fx-background-color: transparent;");
 
-        
         chipsCountLabel.setTranslateX(00);  
         chipsCountLabel.setTranslateY(200);  
 
-        // Add components to layout
         layout.getChildren().addAll(titleLabel, buttonContainer, showProfileButton, showStatsButton, bankruptButton, chipsCountLabel);
     }
     

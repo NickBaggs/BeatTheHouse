@@ -10,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import data.DBStatsHandler;
+import data.DBUserProfileHandler;
 
 public class StatsScreen {
     private Pane layout;
@@ -20,10 +21,10 @@ public class StatsScreen {
     private Label chipsLabel;
     private Label totalChipsWonLabel;
     private Label totalChipsLostLabel;
-    private Label lastLoginLabel;
     private Label timesBankruptLabel;
     private Label highestChipCountLabel;
-    
+    private Label chipsCountLabel;  
+
     public StatsScreen(Main mainApp) {
         this.mainApp = mainApp;
         layout = new Pane();
@@ -44,15 +45,16 @@ public class StatsScreen {
         titleLabel.setFont(new Font("Arial", 36));
         titleLabel.setFill(javafx.scene.paint.Color.WHITE);
 
-        // Position the title near the top and center it horizontally
+        // Position the title 
         titleLabel.layoutXProperty().bind(layout.widthProperty().subtract(titleLabel.prefWidth(-1)).divide(2));
         titleLabel.setTranslateY(60); 
 
-        // Fetch the active user ID
+        // get the active user ID
         int activeUserId = mainApp.getActiveProfileId();
         DBStatsHandler dbStatsHandler = new DBStatsHandler();
+        DBUserProfileHandler dbUserProfileHandler = new DBUserProfileHandler();
 
-        // Fetch the stats for the active user
+        // get stats for the active user
         int wins = dbStatsHandler.getWins(activeUserId);
         int losses = dbStatsHandler.getLosses(activeUserId);
         int chipCount = dbStatsHandler.getChipCount(activeUserId);
@@ -88,21 +90,21 @@ public class StatsScreen {
                 timesBankruptLabel, highestChipCountLabel
         );
 
-        // Position the VBox and set labels
+        // Position the VBox
         statsVBox.setTranslateY(250); 
         statsVBox.setTranslateX(-125);
         
         // Center the VBox 
         statsVBox.layoutXProperty().bind(layout.widthProperty().subtract(statsVBox.prefWidth(-1)).divide(2));
 
-        // Create a button to return to the main menu
+        // Create main menu button
         Button showMenuButton = new Button();
         Image buttonImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Menu_Button.png");
         ImageView buttonImageView = new ImageView(buttonImage);
         showMenuButton.setGraphic(buttonImageView);
         showMenuButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        // Position the menu button at the top left
+        // Position the menu button 
         showMenuButton.setLayoutX(20);
         showMenuButton.setLayoutY(20);
 
@@ -112,8 +114,29 @@ public class StatsScreen {
             mainApp.showMainMenu(); 
         });
 
-        
-        layout.getChildren().addAll(titleLabel, statsVBox, showMenuButton);
+        // Create Delete Button 
+        Button deleteButton = new Button();
+        String deleteButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Delete_Button.png"; 
+        Image deleteButtonImage = new Image(deleteButtonImagePath);
+        ImageView deleteButtonImageView = new ImageView(deleteButtonImage);
+        deleteButton.setGraphic(deleteButtonImageView);
+        deleteButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+
+        // Position the Delete Button
+        deleteButton.setTranslateX(1040);  
+        deleteButton.setTranslateY(20);  
+
+        // Action for Delete Button
+        deleteButton.setOnAction(e -> {
+            System.out.println("Delete Button clicked");
+            dbStatsHandler.updateStats(activeUserId,5000,0,0,0,0,0,0,5000);
+            dbUserProfileHandler.deleteProfile(activeUserId);
+            mainApp.showProfileScreen();
+            
+        });
+
+        // Add all components to layout
+        layout.getChildren().addAll(titleLabel, statsVBox, showMenuButton, deleteButton);
     }
 
     // method to set the style of labels

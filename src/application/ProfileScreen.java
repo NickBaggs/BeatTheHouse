@@ -56,7 +56,7 @@ public class ProfileScreen {
         HBox profileImagesContainer = new HBox(20);  
         profileImagesContainer.setAlignment(Pos.CENTER); 
 
-        // Loop to create 5 profiles
+        // Loop to create the 5 profiles
         for (int i = 1; i <= 5; i++) {
             String profileImagePath = "file:assets/Profile_Pictures/" + i + ".png"; 
             Image profileImage = new Image(profileImagePath);
@@ -67,7 +67,7 @@ public class ProfileScreen {
             // Retrieve profile data using DB functions
             String profileName = dbHandler.getProfileName(i);  
 
-            // Label for the profile
+            // Labe for the profile
             Text createProfileLabel = new Text(profileName != null && !profileName.isEmpty() ? profileName : "Create New Profile");
             createProfileLabel.setFont(new Font("Arial", 14));  
             createProfileLabel.setFill(Color.WHITE); 
@@ -82,11 +82,11 @@ public class ProfileScreen {
             profileButton.setOnAction(e -> {
                 if (profileName != null && !profileName.isEmpty()) {
                     System.out.println("Profile " + index + " selected!");
-                    mainApp.setActiveProfileId(index);  // Set the active profile ID
-                    mainApp.showMainMenu();  // Transition to main menu
+                    mainApp.setActiveProfileId(index);  
+                    mainApp.showMainMenu();  
                 } else {
                     System.out.println("Profile " + index + " is not created yet. Navigate to create profile screen.");
-                    mainApp.showCreateProfileScreen(index);  // Pass the profile ID to the creation screen
+                    mainApp.showCreateProfileScreen(index);  
                 }
             });
 
@@ -107,9 +107,7 @@ public class ProfileScreen {
 
         // Add the profile label and profile images container to the layout
         layout.getChildren().addAll(profileLabel, profileImagesContainer);
-
-        // Go to Main Menu button
-       
+           
     }
 
     public Pane getLayout() {

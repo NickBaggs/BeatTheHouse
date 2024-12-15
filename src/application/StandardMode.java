@@ -96,7 +96,7 @@ public class StandardMode {
         betInputField.setTranslateY(475);
 
         
-        // Create the "Deal" button 
+        // Create the Deal button 
         dealButton = new Button();
         String dealButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Deal_Button.png";
         Image dealButtonImage = new Image(dealButtonImagePath);
@@ -163,7 +163,7 @@ public class StandardMode {
         HBox buttonContainer = new HBox(30);
         buttonContainer.setAlignment(Pos.CENTER);
 
-        // Create the "Stay" button 
+        // Create the Stay button 
         stayButton = new Button();
         String stayButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Stay_Button.png";
         Image stayButtonImage = new Image(stayButtonImagePath);
@@ -172,7 +172,7 @@ public class StandardMode {
         stayButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
         stayButton.setVisible(false);
 
-        // Create the "Hit" button 
+        // Create the Hit button 
         hitButton = new Button();
         String hitButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Hit_Button.png";
         Image hitButtonImage = new Image(hitButtonImagePath);
@@ -245,6 +245,7 @@ public class StandardMode {
         winnerLabel.setVisible(true);
     }
 
+    //display hit and stay
     public void displayPlayerButtons() {
         pause(0.6, () -> {
             hitButton.setVisible(true);

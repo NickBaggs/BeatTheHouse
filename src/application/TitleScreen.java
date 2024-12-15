@@ -45,7 +45,7 @@ public class TitleScreen {
         titleLabel.setFont(new Font("Arial", 36));  
         titleLabel.setFill(Color.WHITE);  
 
-        // Load button image (Start Game)
+        // Load start game button 
         String buttonImagePath = "file:assets/Buttons/Simple Buttons v1.2/simple_ui_button_96_0.png"; 
         Image buttonImage = new Image(buttonImagePath);
         ImageView buttonImageView = new ImageView(buttonImage);
