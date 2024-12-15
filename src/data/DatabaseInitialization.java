@@ -110,7 +110,7 @@ public class DatabaseInitialization {
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, 0); 
+            stmt.setInt(1, 5000); 
             stmt.setInt(2, 0); 
             stmt.setInt(3, 0); 
             stmt.setInt(4, 0); 

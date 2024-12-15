@@ -46,7 +46,7 @@ public class StatsScreen {
 
         // Position the title near the top and center it horizontally
         titleLabel.layoutXProperty().bind(layout.widthProperty().subtract(titleLabel.prefWidth(-1)).divide(2));
-        titleLabel.setTranslateY(60); // Adjust to original vertical position
+        titleLabel.setTranslateY(60); 
 
         // Fetch the active user ID
         int activeUserId = mainApp.getActiveProfileId();
@@ -58,7 +58,6 @@ public class StatsScreen {
         int chipCount = dbStatsHandler.getChipCount(activeUserId);
         int chipsWon = dbStatsHandler.getChipsWon(activeUserId);
         int chipsLost = dbStatsHandler.getChipsLost(activeUserId);
-        int totalWinnings = dbStatsHandler.getTotalWinnings(activeUserId);
         int timesBankrupt = dbStatsHandler.getTimesBankrupt(activeUserId);
         int highestChipCount = dbStatsHandler.getHighestChipCount(activeUserId);
 
@@ -68,7 +67,6 @@ public class StatsScreen {
         chipsLabel = new Label("Chips: " + chipCount);
         totalChipsWonLabel = new Label("Total Chips Won: " + chipsWon);
         totalChipsLostLabel = new Label("Total Chips Lost: " + chipsLost);
-        lastLoginLabel = new Label("Total Winnings: " + totalWinnings);
         timesBankruptLabel = new Label("Times Bankrupt: " + timesBankrupt);
         highestChipCountLabel = new Label("Highest Chip Count: " + highestChipCount);
 
@@ -78,20 +76,19 @@ public class StatsScreen {
         setLabelStyle(chipsLabel);
         setLabelStyle(totalChipsWonLabel);
         setLabelStyle(totalChipsLostLabel);
-        setLabelStyle(lastLoginLabel);
         setLabelStyle(timesBankruptLabel);
         setLabelStyle(highestChipCountLabel);
 
-        // Create a VBox to arrange the labels vertically
+        // Create a VBox to arrange the labels 
         VBox statsVBox = new VBox(15);
         statsVBox.setAlignment(Pos.CENTER);
         statsVBox.getChildren().addAll(
                 winsLabel, lossesLabel, chipsLabel,
-                totalChipsWonLabel, totalChipsLostLabel, lastLoginLabel,
+                totalChipsWonLabel, totalChipsLostLabel,
                 timesBankruptLabel, highestChipCountLabel
         );
 
-        // Position the VBox and set labels' vertical positions manually
+        // Position the VBox and set labels
         statsVBox.setTranslateY(250); 
         statsVBox.setTranslateX(-125);
         
@@ -112,14 +109,14 @@ public class StatsScreen {
         // Menu Button action
         showMenuButton.setOnAction(e -> {
             System.out.println("Show Menu Button Clicked!");
-            mainApp.showMainMenu(); // Navigate back to the main menu
+            mainApp.showMainMenu(); 
         });
 
-        // Add all components to the layout
+        
         layout.getChildren().addAll(titleLabel, statsVBox, showMenuButton);
     }
 
-    // Helper method to set the style of labels
+    // method to set the style of labels
     private void setLabelStyle(Label label) {
         label.setFont(new Font("Arial", 24));
         label.setTextFill(javafx.scene.paint.Color.WHITE);

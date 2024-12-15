@@ -26,6 +26,7 @@ public class GameManager {
     private String gameResults;    
     private DBStatsHandler statsHandler;
     private boolean doneDealing;
+    int betAmount;
 
     // Constructor for player and dealer hands
     public GameManager(int deckCount, HBox playerHandContainer, HBox dealerHandContainer, Main mainApp) {
@@ -43,6 +44,7 @@ public class GameManager {
         this.isPlayerTurn = true;
         
         this.statsHandler = new DBStatsHandler(); // Initialize statsHandler here
+        updateHighestChipCount();
     }
 
     
@@ -232,26 +234,36 @@ public class GameManager {
         if (playerValue > 21) {
             gameResults = "Dealer wins, Player Busted";  // Player busts, dealer wins
             statsHandler.incrementLosses(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " PLAYER BUST");
-            
+            System.out.println(mainApp.getActiveProfileId() + " PLAYER BUST " + getBetAmount());
+            statsHandler.addToChipsLost(mainApp.getActiveProfileId(),getBetAmount());
+            updateHighestChipCount();
         } else if (dealerValue > 21) {
             gameResults = "Player wins, Dealer Busted";  // Dealer busts, player wins
             statsHandler.incrementWins(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " DEALER BUST");
+            System.out.println(mainApp.getActiveProfileId() + " DEALER BUST " + getBetAmount());
+            
+            statsHandler.addToChipCount(mainApp.getActiveProfileId(),getBetAmount()*2 );
+            statsHandler.addToChipsWon(mainApp.getActiveProfileId(),getBetAmount());
+            updateHighestChipCount();
             
         } else if (playerValue > dealerValue) {
             gameResults = "Player wins";  // Player wins
             statsHandler.incrementWins(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " PLAYER WINS HIGH CARD");
-            
+            System.out.println(mainApp.getActiveProfileId() + " PLAYER WINS HIGH CARD " + getBetAmount());
+            statsHandler.addToChipCount(mainApp.getActiveProfileId(),getBetAmount()*2 );
+            statsHandler.addToChipsWon(mainApp.getActiveProfileId(),getBetAmount());
+            updateHighestChipCount();
         } else if (dealerValue > playerValue) {
             gameResults = "Dealer Wins";  // Dealer wins
             statsHandler.incrementLosses(mainApp.getActiveProfileId());
-            System.out.println(mainApp.getActiveProfileId() + " DEALER WINS HIGH CARD");
-            
+            System.out.println(mainApp.getActiveProfileId() + " DEALER WINS HIGH CARD " + getBetAmount());
+            statsHandler.addToChipsLost(mainApp.getActiveProfileId(),getBetAmount());
+            updateHighestChipCount();
         } else {
             gameResults = "Push";  
-            System.out.println(mainApp.getActiveProfileId() + " PUSH");
+            System.out.println(mainApp.getActiveProfileId() + " PUSH " + getBetAmount());
+            statsHandler.addToChipCount(mainApp.getActiveProfileId(),getBetAmount() ); 
+            updateHighestChipCount();
         }
 
         setWinner(gameResults);
@@ -296,4 +308,19 @@ public class GameManager {
  	public boolean getDoneDealing() {
  		return doneDealing;
  	}
+ 	
+ 	public void setBetAmount(int betAmount) {
+ 		this.betAmount = betAmount;
+ 	}
+ 	
+ 	public int getBetAmount() {
+ 		return betAmount;
+ 	}
+ 	
+ 	public void updateHighestChipCount() {
+ 		if(statsHandler.getChipCount(mainApp.getActiveProfileId())> statsHandler.getHighestChipCount(mainApp.getActiveProfileId())) {
+ 			statsHandler.updateHighestChipCount(mainApp.getActiveProfileId(), statsHandler.getChipCount(mainApp.getActiveProfileId()));
+ 		}
+ 	}
+ 	
 }

@@ -1,7 +1,9 @@
 package application;
 
+import data.DBStatsHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -11,8 +13,11 @@ import javafx.scene.text.Text;
 public class MainMenu {
     private StackPane layout;
     private Main mainApp;
+    private DBStatsHandler statsHandler;
+    private Label chipsCountLabel;  // Declare chipsCountLabel
 
     public MainMenu(Main mainApp) {
+        this.statsHandler = new DBStatsHandler();
         this.mainApp = mainApp;
         layout = new StackPane();
 
@@ -42,21 +47,21 @@ public class MainMenu {
         HBox buttonContainer = new HBox(30);
         buttonContainer.setAlignment(javafx.geometry.Pos.CENTER);
 
-        // Create a green button (Special Powers Mode)
+        // Create special powers mode button
         Button greenButton = new Button();
         Image greenImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Special_Button.png");
         ImageView greenImageView = new ImageView(greenImage);
         greenButton.setGraphic(greenImageView);
         greenButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        // Create a blue button (Practice Mode)
+        // Create practice mode button
         Button blueButton = new Button();
         Image blueImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Practice_Button.png");
         ImageView blueImageView = new ImageView(blueImage);
         blueButton.setGraphic(blueImageView);
         blueButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
-        // Create a red button (Standard Mode)
+        // Create Standard Mode button
         Button redButton = new Button();
         Image redImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Standard_Button.png");
         ImageView redImageView = new ImageView(redImage);
@@ -81,12 +86,10 @@ public class MainMenu {
         // Standard Mode
         redButton.setOnAction(e -> mainApp.showStandardModeScreen());
 
-        // ======== Top-Left Button for Profile Screen ============
+        // //profile screen button
         Button showProfileButton = new Button();
         Image profileImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Profile_Button.png");
         ImageView profileImageView = new ImageView(profileImage);
-        
-
         showProfileButton.setGraphic(profileImageView);
         showProfileButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
@@ -99,12 +102,9 @@ public class MainMenu {
             mainApp.showProfileScreen();
         });
 
-        
         Button showStatsButton = new Button();
         Image statsImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Stats_Button.png");
         ImageView statsImageView = new ImageView(statsImage);
-        
-
         showStatsButton.setGraphic(statsImageView);
         showStatsButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
 
@@ -116,8 +116,53 @@ public class MainMenu {
             mainApp.showStatsScreen();
         });
 
+        // Create Bankrupt Button 
+        Button bankruptButton = new Button();
+        Image bankruptImage = new Image("file:assets/Buttons/Simple Buttons v1.2/Bankrupt_Button.png");  
+        ImageView bankruptImageView = new ImageView(bankruptImage);
+        bankruptButton.setGraphic(bankruptImageView);
+        bankruptButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
+
         
-        layout.getChildren().addAll(titleLabel, buttonContainer, showProfileButton, showStatsButton);
+        bankruptButton.setTranslateX(00); 
+        bankruptButton.setTranslateY(250);  
+        bankruptButton.setVisible(checkBankrupt());
+        
+        // Action for Bankrupt Button
+        bankruptButton.setOnAction(e -> {
+        	if(statsHandler.getChipCount(mainApp.getActiveProfileId())<5000) {
+        		statsHandler.updateChipCount(mainApp.getActiveProfileId(), 5000);
+        		statsHandler.incrementTimesBankrupt(mainApp.getActiveProfileId());    
+        		bankruptButton.setVisible(false);
+        		chipsCountLabel.setText("Chips: " + statsHandler.getChipCount(mainApp.getActiveProfileId()));
+        	}
+        	System.out.println("Bankrupt button clicked");
+        });
+
+        // Create Chips Count Label
+        int chipCount = statsHandler.getChipCount(mainApp.getActiveProfileId());
+        chipsCountLabel = new Label("Chips: " + chipCount);
+        chipsCountLabel.setFont(new Font("Arial", 24));
+        chipsCountLabel.setTextFill(javafx.scene.paint.Color.WHITE);
+        chipsCountLabel.setStyle("-fx-background-color: transparent;");
+
+        
+        chipsCountLabel.setTranslateX(00);  
+        chipsCountLabel.setTranslateY(200);  
+
+        // Add components to layout
+        layout.getChildren().addAll(titleLabel, buttonContainer, showProfileButton, showStatsButton, bankruptButton, chipsCountLabel);
+    }
+    
+    public boolean checkBankrupt() {
+    	boolean bankrupt;
+    	if(statsHandler.getChipCount(mainApp.getActiveProfileId())<5000) {
+    		bankrupt = true;
+    	}
+    	else {
+    		bankrupt = false;
+    	}
+    	return bankrupt;
     }
 
     public StackPane getLayout() {

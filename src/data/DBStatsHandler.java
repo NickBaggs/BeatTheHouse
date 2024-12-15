@@ -65,6 +65,21 @@ public class DBStatsHandler {
             e.printStackTrace();
         }
     }
+    
+    public void incrementTimesBankrupt(int userProfileId) {
+        String query = "UPDATE stats SET times_bankrupt = times_bankrupt + 1 WHERE user_profile_id = ?";
+
+        try (Connection conn = DatabaseConnector.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userProfileId); 
+            stmt.executeUpdate();  
+            System.out.println("Times bankrupt incremented for user profile ID: " + userProfileId);
+        } catch (SQLException e) {
+            System.out.println("Error incrementing times bankrupt for user profile ID: " + userProfileId);
+            e.printStackTrace();
+        }
+    }
+
 
     
  // Method to add (or subtract) an amount from chip_count
@@ -133,16 +148,16 @@ public class DBStatsHandler {
 
     
     
-    // Method to update chip count (add or subtract)
-    public void updateChipCount(int userProfileId, int chipsChange) {
-        String query = "UPDATE stats SET chip_count = chip_count + ? WHERE user_profile_id = ?";
-        
+    // Method to update chip count
+    public void updateChipCount(int userProfileId, int newChipCount) {
+        String query = "UPDATE stats SET chip_count = ? WHERE user_profile_id = ?";
+
         try (Connection conn = DatabaseConnector.getConnection(); 
              PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, chipsChange);  // Can be positive or negative based on the chipsChange value
+            stmt.setInt(1, newChipCount);  
             stmt.setInt(2, userProfileId);
             stmt.executeUpdate();  
-            System.out.println("Chip count updated for user profile ID: " + userProfileId);
+            System.out.println("Chip count updated to " + newChipCount + " for user profile ID: " + userProfileId);
         } catch (SQLException e) {
             System.out.println("Error updating chip count for user profile ID: " + userProfileId);
             e.printStackTrace();

@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;  
 import cards.GameManager;
 import cards.PlayerHand;
+import data.DBStatsHandler;
 import cards.DealerHand;
 
 public class StandardMode {
@@ -26,6 +27,7 @@ public class StandardMode {
     private GameManager gameManager;
     private HBox playerHandContainer;
     private HBox dealerHandContainer;
+    private DBStatsHandler statsHandler;
 
     private Button dealButton;
     private Button hitButton;
@@ -35,10 +37,12 @@ public class StandardMode {
 
     private Label betLabel;
     private TextField betInputField;  
+    private Label chipCountLabel;
 
     public StandardMode(Main mainApp) {
         this.mainApp = mainApp;
         layout = new Pane();
+        this.statsHandler = new DBStatsHandler();
 
         // Set the background image
         String backgroundImagePath = "file:assets/Backgrounds/Table_Background.png";
@@ -75,7 +79,13 @@ public class StandardMode {
         betLabel.setTextFill(Color.WHITE);
         betLabel.setStyle("-fx-font-size: 18px;");
         betLabel.setTranslateX(500);
-        betLabel.setTranslateY(470);
+        betLabel.setTranslateY(445);
+        
+        chipCountLabel = new Label("Chips: " + statsHandler.getChipCount(mainApp.getActiveProfileId()));
+        chipCountLabel.setTextFill(Color.WHITE);
+        chipCountLabel.setStyle("-fx-font-size: 18px;");
+        chipCountLabel.setTranslateX(500);
+        chipCountLabel.setTranslateY(525);
         
         //Bet text field
         betInputField = new TextField();
@@ -83,7 +93,7 @@ public class StandardMode {
         betInputField.setStyle("-fx-background-color: transparent; -fx-border-color: white; -fx-text-fill: white;");
         betInputField.setFont(new javafx.scene.text.Font(18));
         betInputField.setTranslateX(500);
-        betInputField.setTranslateY(500);
+        betInputField.setTranslateY(475);
 
         
         // Create the "Deal" button 
@@ -99,17 +109,24 @@ public class StandardMode {
         dealButton.layoutYProperty().bind(layout.heightProperty().subtract(dealButton.heightProperty()).divide(2));
 
         dealButton.setOnAction(e -> {
+        	int betAmount =0;
         	boolean validBet = false;
         	String betText = betInputField.getText();
         	try {     	    
-        	    int betAmount = Integer.parseInt(betText);
+        	     betAmount = Integer.parseInt(betText);
         	    System.out.println("Bet entered: " + betAmount);
         	     validBet = true;
         	} catch (NumberFormatException ex) {       	    
-        	    System.out.println("Invalid bet. Please enter a valid number.");
-        	    
+        	    System.out.println("Invalid bet. Please enter a valid number.");       	    
         	}
+        	
+        	if(betAmount > statsHandler.getChipCount(mainApp.getActiveProfileId())) {
+        		 validBet = false;
+        	}
+        	
         	if(validBet == true) {
+        	statsHandler.addToChipCount(mainApp.getActiveProfileId(), -betAmount);
+        	gameManager.setBetAmount(betAmount);
             gameManager.resetGame();
             gameManager.startGame();
             dealButton.setVisible(false);
@@ -118,11 +135,13 @@ public class StandardMode {
             winnerLabel.setVisible(false);
             betInputField.setVisible(false);
             betLabel.setVisible(false);
+            chipCountLabel.setVisible(false);           
             displayPlayerButtons();}
         	
         	else {
         		betLabel.setText("Enter A Valid Bet!");
         	}
+        	
         });
 
         // Create the Main Menu button
@@ -198,7 +217,7 @@ public class StandardMode {
         winnerLabel.layoutYProperty().bind(layout.heightProperty().multiply(0.4));
 
         // Add components to layout
-        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton, betLabel, betInputField);  // Add Bet components here
+        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton, betLabel, betInputField, chipCountLabel);  // Add Bet components here
     }
 
     // Change visibility of the buttons when game starts
@@ -210,6 +229,8 @@ public class StandardMode {
         mainMenuButton.setVisible(true);
         betInputField.setVisible(true);
         betLabel.setVisible(true);
+        chipCountLabel.setText("Chips: " + statsHandler.getChipCount(mainApp.getActiveProfileId()));
+        chipCountLabel.setVisible(true);
     }
 
     public Pane getLayout() {
@@ -242,4 +263,8 @@ public class StandardMode {
         pause.setOnFinished(e -> action.run());
         pause.play();
     }
+    
+    
 }
+
+	
