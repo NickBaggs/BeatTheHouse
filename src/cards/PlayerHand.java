@@ -27,6 +27,7 @@ public class PlayerHand {
     public int getPlayerHandValue() {
         int totalValue = 0;
         int aceAmount = 0;
+        int jokerAmount = 0;
         ArrayList<Card> hand = getHand();  
         
         
@@ -35,15 +36,34 @@ public class PlayerHand {
             Card card = hand.get(i); 
             totalValue += card.getValue();
             
-          //adjust hand value based on ace
+        
             if(card.getRank().equals("Ace")) {
             ++aceAmount;	
             }
         }
         
+        for (int i = 0; i < hand.size(); i++) {
+            Card card = hand.get(i);           
+        
+            if(card.getRank().equals("Joker")) {
+            ++jokerAmount;	
+            }
+        }
+        
+         //adjust hand value based on ace
         while (totalValue<=11 && aceAmount>0) {
         	totalValue = totalValue+10;
         	--aceAmount;
+        }
+        
+        if(jokerAmount>0) {
+        	
+        	if(totalValue<=11) {
+        		totalValue = totalValue+10;
+        	}
+        	else {
+        		totalValue = totalValue +(21-totalValue);
+        	}
         }
 
         return totalValue; 

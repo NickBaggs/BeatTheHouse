@@ -26,7 +26,7 @@ public class SpecialGameManager {
         this.mainApp = mainApp;
         this.deckCount = deckCount;
         this.deck = new Deck();
-        this.deck.addDecks(deckCount);
+        this.deck.addSpecialDecks(deckCount);
         this.deck.shuffleDeck();
 
         this.playerHand = new PlayerHand();

@@ -78,6 +78,17 @@ public class Deck {
         addCardToDeck("Clubs", "Jack", 10, 50);
         addCardToDeck("Clubs", "Queen", 10, 51);
         addCardToDeck("Clubs", "King", 10, 52);
+        
+    }
+    
+    public void addSpecialDecks(int deckCount) {
+    	this.deckCount = deckCount;  
+        for (int i = 0; i < deckCount; i++) {
+            addSingleDeck();  
+            addCardToDeck("Black", "Joker", 0, 53);
+            addCardToDeck("Red", "Joker", 0, 54);           
+        }
+        shuffleDeck();  
     }
 
     

@@ -29,6 +29,7 @@ public class PracticeMode {
     private Button stayButton;
     private Button mainMenuButton;  
     private Label winnerLabel; 
+    private Label handValueLabel;
 
     public PracticeMode(Main mainApp) {
         this.mainApp = mainApp;
@@ -143,6 +144,7 @@ public class PracticeMode {
         hitButton.setOnAction(e -> {
             System.out.println("Hit button pressed");
             gameManager.playerTurn();  
+            handValueLabel.setText(""+gameManager.getPlayerHandValue());
             if(gameManager.getPlayerHandValue() > 21) {
                 swapButtons();
                 updateWinnerLabel();  
@@ -156,13 +158,25 @@ public class PracticeMode {
         winnerLabel.setVisible(true);  
         winnerLabel.layoutXProperty().bind(layout.widthProperty().subtract(winnerLabel.widthProperty()).divide(2));
         winnerLabel.layoutYProperty().bind(layout.heightProperty().multiply(0.4));
+        
+        
+      //hand value label
+        handValueLabel = new Label("You should not see this");
+        handValueLabel.setTextFill(Color.WHITE);
+        handValueLabel.setStyle("-fx-font-size: 24px;");
+        handValueLabel.setVisible(false);  
+              
+        handValueLabel.setTranslateX(588);
+        handValueLabel.setTranslateY(500);
 
-        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton);
+
+        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton,handValueLabel);
     }
     //Changes visibility of buttons
     public void swapButtons() {
         hitButton.setVisible(false);  
         stayButton.setVisible(false);  
+        handValueLabel.setVisible(false);
         dealButton.setVisible(true);
         winnerLabel.setVisible(true); 
         mainMenuButton.setVisible(true);
@@ -182,6 +196,9 @@ public class PracticeMode {
         pause(0.6, () -> {  
             hitButton.setVisible(true);   
             stayButton.setVisible(true); 
+            handValueLabel.setVisible(true);
+            handValueLabel.setText(""+gameManager.getPlayerHandValue());
+            
             if(gameManager.checkForBlackJack()) {
                 gameManager.dealerTurn();         
                 swapButtons();

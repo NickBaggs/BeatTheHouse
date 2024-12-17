@@ -30,6 +30,7 @@ public class SpecialMode {
     private Button mainMenuButton;  
     private Button specialButton;  
     private Label winnerLabel; 
+    private Label handValueLabel;
 
     public SpecialMode(Main mainApp) {
         this.mainApp = mainApp;
@@ -82,7 +83,7 @@ public class SpecialMode {
             gameManager.resetGame();  
             gameManager.startGame();  
             dealButton.setVisible(false);  
-            mainMenuButton.setVisible(false);  
+            mainMenuButton.setVisible(false);              
             winnerLabel.setText("Start the game");  
             winnerLabel.setVisible(false); 
             displayPlayerButtons();
@@ -103,22 +104,7 @@ public class SpecialMode {
             mainApp.showMainMenu();
         });
 
-        // Create Special Button
-        specialButton = new Button();
-        String specialButtonImagePath = "file:assets/Buttons/Simple Buttons v1.2/Special_Button.png"; // New asset
-        Image specialButtonImage = new Image(specialButtonImagePath);
-        ImageView specialButtonImageView = new ImageView(specialButtonImage);
-        specialButton.setGraphic(specialButtonImageView);
-        specialButton.setStyle("-fx-background-color: transparent; -fx-border: none;");
-
-        // Position the Special Button
-        specialButton.setTranslateX(300);  
-        specialButton.setTranslateY(200);  
-
-        // Action for Special Button
-        specialButton.setOnAction(e -> {
-            System.out.println("Special Button clicked");
-        });
+       
 
         // HBox for Hit and Stay
         HBox buttonContainer = new HBox(30);  
@@ -159,8 +145,10 @@ public class SpecialMode {
 
         // Action for Hit
         hitButton.setOnAction(e -> {
-            System.out.println("Hit button pressed");
+            System.out.println("Hit button pressed: " );
             gameManager.playerTurn();  
+            System.out.println("Player Hand Value: " + gameManager.getPlayerHandValue());
+            handValueLabel.setText(""+gameManager.getPlayerHandValue());
             if(gameManager.getPlayerHandValue() > 21) {
                 swapButtons();
                 updateWinnerLabel();  
@@ -174,13 +162,23 @@ public class SpecialMode {
         winnerLabel.setVisible(true);  
         winnerLabel.layoutXProperty().bind(layout.widthProperty().subtract(winnerLabel.widthProperty()).divide(2));
         winnerLabel.layoutYProperty().bind(layout.heightProperty().multiply(0.4));
+        
+     //hand value label
+        handValueLabel = new Label("You should not see this");
+        handValueLabel.setTextFill(Color.WHITE);
+        handValueLabel.setStyle("-fx-font-size: 24px;");
+        handValueLabel.setVisible(false);  
+              
+        handValueLabel.setTranslateX(588);
+        handValueLabel.setTranslateY(500);
 
-        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton, specialButton); // Add specialButton here
+        layout.getChildren().addAll(dealButton, buttonContainer, winnerLabel, mainMenuButton, handValueLabel); 
     }
     
     public void swapButtons() {
         hitButton.setVisible(false);  
-        stayButton.setVisible(false);  
+        stayButton.setVisible(false); 
+        handValueLabel.setVisible(false); 
         dealButton.setVisible(true);
         winnerLabel.setVisible(true); 
         mainMenuButton.setVisible(true);
@@ -200,6 +198,9 @@ public class SpecialMode {
         pause(0.6, () -> {  
             hitButton.setVisible(true);   
             stayButton.setVisible(true); 
+            handValueLabel.setVisible(true);
+            handValueLabel.setText(""+gameManager.getPlayerHandValue());
+            
             if(gameManager.checkForBlackJack()) {
                 gameManager.dealerTurn();         
                 swapButtons();
